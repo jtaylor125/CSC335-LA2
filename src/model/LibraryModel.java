@@ -16,89 +16,135 @@ public class LibraryModel {
 	// make sure to return copy/just info
 	// search music store for song by title
 	public Song searchSongTitle(String title) {
-		// TO DO
+		// TO DO, should be a MusicStore method to search
 		return null;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for song by artist
 	public Song searchSongArtist(String artist) {
-		// TO DO
+		// TO DO, should be a MusicStore method to search
 		return null;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for album by title
 	public Album searchAlbumTitle(String title) {
-		// TO DO
+		// TO DO, should be a MusicStore method to search
 		return null;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for album by artist
 	public Album searchAlbumArtist(String artist) {
-		// TO DO
+		// TO DO, should be a MusicStore method to search
 		return null;
 	}
 	
 	// add a song from music store to library
 	public void addSong(String songName) {
-		//TO DO
+		//TO DO, search for song from MusicStore, add it to library
 		return;
 	}
 	
 	// add a whole album from music store to library
 	public void addAlbum(String albumName) {
-		//TO DO
+		//TO DO, search for album from MusicStore, add it to library
 		return;
 	}
 	
 	// get list of song titles in whole library
 	public ArrayList<String> getSongTitles(){
-		//TO DO
-		return null;
+		ArrayList<String> titles = new ArrayList<String>();
+		
+		// need to add getTitle to song
+		for (int i=0; i<library.size();i++) {
+			if (!titles.contains(library.get(i).getTitle())) {
+				titles.add(library.get(i).getTitle());
+			}
+		}
+		
+		return titles; // do we need an unmodifiable list here?
 	}
 	
 	// get list of artists in whole library
 	public ArrayList<String> getArtists(){
-		//TO DO
-		return null;
+		ArrayList<String> artists = new ArrayList<String>();
+		
+		// need to add getArtist to song
+		for (int i=0; i<library.size();i++) {
+			if (!artists.contains(library.get(i).getArtist())) {
+				artists.add(library.get(i).getArtist());
+			}
+		}
+		
+		return artists; // do we need an unmodifiable list here?
 	}
 	
 	// get list of albums in whole library
 	public ArrayList<String> getAlbums(){
-		//TO DO
-		return null;
+		ArrayList<String> albums = new ArrayList<String>();
+		
+		// need to add getAlbum to song
+		for (int i=0; i<library.size();i++) {
+			if (!albums.contains(library.get(i).getAlbum())) {
+				albums.add(library.get(i).getAlbum());
+			}
+		}
+		
+		return albums; // do we need an unmodifiable list here?
 	}
 	
 	// get list of playlists in whole library
 	public ArrayList<String> getPlaylists(){
-		//TO DO
-		return null;
+		ArrayList<String> playlists = new ArrayList<String>();
+		
+		// need to add getAlbum to song
+		for (int i=0; i<playlistList.size();i++) {
+			if (!playlists.contains(playlistList.get(i).getName())) {
+				playlists.add(playlistList.get(i).getName());
+			}
+		}
+		
+		return playlists; // do we need an unmodifiable list here?
 	}
 	
 	// get list of favorite songs in whole library
 	public ArrayList<String> getFavoriteSongs(){
-		//TO DO
-		return null;
+		ArrayList<String> favorites = new ArrayList<String>();
+		
+		// need to add getTitle and isFavorite to song
+		for (int i=0; i<library.size();i++) {
+			if (!favorites.contains(library.get(i).getTitle()) && library.get(i).isFavorite()) {
+				favorites.add(library.get(i).getTitle());
+			}
+		}
+		
+		return favorites; // do we need an unmodifiable list here?
 	}
 	
 	// create a playlist and add it to list of playlists
 	public void createPlaylist(String playlistName) {
-		//TO DO
-		return;
+		Playlist newPlaylist = new Playlist(playlistName);
+		playlistList.add(newPlaylist);
 	}
 	
 	// add a song to a playlist
-	public void addToPlaylist(String songName) {
-		//TO DO 
-		return;
+	public void addToPlaylist(Song song, String playlistName) {
+		for (int i=0; i < playlistList.size(); i++) {
+			if (playlistList.get(i).getName().equals(playlistName)) {
+				playlistList.get(i).addSong(song);
+			}
+		}
 	}
 	
 	// remove a song from a playlist
-	public void removeFromPlaylist(String songName) {
-		//TO DO
-		return;
+	public void removeFromPlaylist(Song songName, String playlistName) {
+		for (int i=0; i < playlistList.size(); i++) {
+			if (playlistList.get(i).getName().equals(playlistName)) {
+				playlistList.get(i).removeSong(song);
+			}
+		}
 	}
 	
 	// mark a song as a favorite
