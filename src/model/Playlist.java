@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Playlist {
 	private ArrayList<Song> playlist;
-	private String name;
+	private final String name;
 	
 	public Playlist(String name) {
 		this.name = name;
@@ -18,6 +18,10 @@ public class Playlist {
 	
 	public void removeSong(Song song) {
 		playlist.remove(song);
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	
