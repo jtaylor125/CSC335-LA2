@@ -15,30 +15,30 @@ public class LibraryModel {
 	
 	// make sure to return copy/just info
 	// search music store for song by title
-	public Song searchSongTitle(String title) {
-		// TO DO, should be a MusicStore method to search
-		return null;
+	public Song searchStoreSongTitle(String title) {
+		Song searchSong = MusicStore.searchSongTitle(title);
+		return searchSong;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for song by artist
-	public Song searchSongArtist(String artist) {
-		// TO DO, should be a MusicStore method to search
-		return null;
+	public Song searchStoreSongArtist(String artist) {
+		Song searchSong = MusicStore.searchSongArtist(artist);
+		return searchSong;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for album by title
-	public Album searchAlbumTitle(String title) {
-		// TO DO, should be a MusicStore method to search
-		return null;
+	public Album searchStoreAlbumTitle(String title) {
+		Album searchAlbum = MusicStore.searchAlbumTitle(title);
+		return searchAlbum;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for album by artist
-	public Album searchAlbumArtist(String artist) {
-		// TO DO, should be a MusicStore method to search
-		return null;
+	public Album searchStoreAlbumArtist(String artist) {
+		Album searchAlbum = MusicStore.searchAlbumArtist(artist);
+		return searchAlbum;
 	}
 	
 	// add a song from music store to library
@@ -148,15 +148,23 @@ public class LibraryModel {
 	}
 	
 	// mark a song as a favorite
+	// need a markFavorite method in Song
 	public void markFavorite(String songName) {
-		//TO DO
-		return;
+		for (int i =0; i< library.size();i++) {
+			if (library.get(i).getName().equals(songName)) {
+				library.get(i).markFavorite();
+			}
+		}
 	}
 	
 	// rate a song from 1 to 5
+	// need a rating method
 	public void rateSong(String songName, int rating) {
-		//TO DO
-		return;
+		for (int i =0; i< library.size();i++) {
+			if (library.get(i).getName().equals(songName)) {
+				library.get(i).rate(rating);
+			}
+		}
 	}
 	
 }
