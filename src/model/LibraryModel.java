@@ -15,30 +15,52 @@ public class LibraryModel {
 	
 	// make sure to return copy/just info
 	// search music store for song by title
-	public Song searchStoreSongTitle(String title) {
-		Song searchSong = MusicStore.searchSongTitle(title);
-		return searchSong;
+	public ArrayList<Song> searchStoreSongTitle(String title) {
+		ArrayList<Album> albums = musicStore.getAlbums();
+		ArrayList<Song> searchSongs = new ArrayList<Song>();
+		
+		for (int i=0;i<albums.size();i++) {
+			ArrayList<Song> songList = albums.get(i).getSongs();
+			for (Song song : songList) {
+				if (song.getTitle().equals(title)) {
+					searchSongs.add(song);
+				}
+			}
+		}
+		
+		return searchSongs;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for song by artist
-	public Song searchStoreSongArtist(String artist) {
-		Song searchSong = MusicStore.searchSongArtist(artist);
-		return searchSong;
+	public ArrayList<Song> searchStoreSongArtist(String artist) {
+		ArrayList<Album> albums = musicStore.getAlbums();
+		ArrayList<Song> searchSongs = new ArrayList<Song>();
+		
+		for (int i=0;i<albums.size();i++) {
+			ArrayList<Song> songList = albums.get(i).getSongs();
+			for (Song song : songList) {
+				if (song.getArtist().equals(artist)) {
+					searchSongs.add(song);
+				}
+			}
+		}
+		
+		return searchSongs;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for album by title
-	public Album searchStoreAlbumTitle(String title) {
-		Album searchAlbum = MusicStore.searchAlbumTitle(title);
-		return searchAlbum;
+	public ArrayList<Album> searchStoreAlbumTitle(String title) {
+		ArrayList<Album> searchAlbums = new ArrayList<Album>();
+		return searchAlbums;
 	}
 	
 	// make sure to return copy/just info
 	// search music store for album by artist
-	public Album searchStoreAlbumArtist(String artist) {
-		Album searchAlbum = MusicStore.searchAlbumArtist(artist);
-		return searchAlbum;
+	public ArrayList<Album> searchStoreAlbumArtist(String artist) {
+		ArrayList<Album> searchAlbums = new ArrayList<Album>();
+		return searchAlbums;
 	}
 	
 	// add a song from music store to library
@@ -139,10 +161,10 @@ public class LibraryModel {
 	}
 	
 	// remove a song from a playlist
-	public void removeFromPlaylist(Song songName, String playlistName) {
+	public void removeFromPlaylist(String songName, String playlistName) {
 		for (int i=0; i < playlistList.size(); i++) {
 			if (playlistList.get(i).getName().equals(playlistName)) {
-				playlistList.get(i).removeSong(song);
+				playlistList.get(i).removeSong(songName);
 			}
 		}
 	}
@@ -151,8 +173,8 @@ public class LibraryModel {
 	// need a markFavorite method in Song
 	public void markFavorite(String songName) {
 		for (int i =0; i< library.size();i++) {
-			if (library.get(i).getName().equals(songName)) {
-				library.get(i).markFavorite();
+			if (library.get(i).getTitle().equals(songName)) {
+				library.get(i).setFavorite();
 			}
 		}
 	}
@@ -161,8 +183,11 @@ public class LibraryModel {
 	// need a rating method
 	public void rateSong(String songName, int rating) {
 		for (int i =0; i< library.size();i++) {
-			if (library.get(i).getName().equals(songName)) {
+			if (library.get(i).getTitle().equals(songName)) {
 				library.get(i).rate(rating);
+				if (rating == 5) {
+					library.get(i).setFavorite();
+				}
 			}
 		}
 	}

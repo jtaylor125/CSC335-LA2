@@ -14,12 +14,16 @@ package model;
 
 public class Song {
 
+
 	/*
 	 * 		Instance Variables
 	 */
-	private String title;
-	private String artist;
-	private String album;
+
+
+	private final String title;
+	private final String artist;
+	private final String album;
+
 	
 	private boolean favorite;
 	
@@ -87,7 +91,7 @@ public class Song {
 	@Override
 	public String toString() {
 		String retval = this.title  + "\n"
-						+ "Author: " + this.artist + "\n"
+						+ "Artist: " + this.artist + "\n"
 						+ "Album:  " + this.album  + "\n";
 		
 		return retval;		

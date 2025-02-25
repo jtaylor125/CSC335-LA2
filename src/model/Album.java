@@ -4,15 +4,18 @@ import java.util.ArrayList;
 
 public class Album {
 
+
 	/*
 	 * 		Instance Variables
 	 */
-	private ArrayList<Song> songList;
+
+	private final ArrayList<Song> songList;
+
 	
-	private String name;
-	private String artist;
-	private String genre;
-	private String year;
+	private final String name;
+	private final String artist;
+	private final String genre;
+	private final String year;
 	
 	/*
 	 * 		Constructor
@@ -41,14 +44,13 @@ public class Album {
 	}
 	public String getYear() {
 		return this.year;
-	}
-	
+	}	
+
 	public ArrayList<Song> getSongs(){
-		return new ArrayList<Song>(this.songList);
+		return songList;
 	}
 	
-	
-	
+
 	@Override
 	public String toString() {
 		String retval =  this.name   + "\n"

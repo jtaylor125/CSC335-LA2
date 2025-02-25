@@ -3,11 +3,12 @@ package model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MusicStore {
 	/*
-	 * 		Setters
+	 * 		Instance Variables
 	 */
 	ArrayList<Album> albums;
 	
@@ -56,19 +57,21 @@ public class MusicStore {
 			
 			// local variables to the for loop, loaded in for
 			// each file
-			String songInfo[]  = currFile.next().split(",");
+			String songInfo[]  = currFile.nextLine().split(",");
 			ArrayList<Song> songArr = new ArrayList<>();
 			
 			// go through the rest of the lines and create song
-			// array for the Album object
-			while(currFile.hasNext()) {
-				Song temp = new Song(currFile.next(), songInfo[1], songInfo[0]);
+			// array for the Album object			
+			while(currFile.hasNextLine()) {
+				Song temp = new Song(currFile.nextLine(), songInfo[1], songInfo[0]);
 				songArr.add(temp);
 			}
 			
+
 			// add a newly constructed album object from
 			// information parsed from file to albums array
-			albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[4], songArr));
+			albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[3], songArr));
+
 		}
 		
 		return albums;
@@ -82,8 +85,8 @@ public class MusicStore {
 	private ArrayList<String> getFileNames(Scanner file) {
 		ArrayList<String> retArr = new ArrayList<>();
 		
-		while(file.hasNext()){
-			String temp[] = file.next().split(",");
+		while(file.hasNextLine()){
+			String temp[] = file.nextLine().split(",");
 			StringBuffer sb = new StringBuffer();
 			
 			sb.append(temp[0]);
@@ -96,12 +99,73 @@ public class MusicStore {
 		
 		return retArr;
 	}
-	
+
 	/*
 	 * 		Search Methods
 	 */
-	public void search(String s, String songOrAlbum, String titleOrArtist) {
-		return;
+	public String search(String s, String songOrAlbum, String titleOrArtist) {
+		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Title"))
+			return searchSongTitle(s);
+		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Artist"))
+			return searchSongArtist(s);
+		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Title"))
+			return searchAlbumTitle(s);
+		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Artist"))
+			return searchAlbumArtist(s);
+		
+		return "Incorrect parameters sent, check code\n";
 	}
 	
+	private String searchSongTitle(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums) 
+			for(Song s : a.getSongs()) 
+				if(val.equals(s.getTitle())) 
+					retval = retval + s.toString();
+
+		return retval;
+	}
+	
+	private String searchSongArtist(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums)
+			if(val.equals(a.getArtist()))
+				for(Song s : a.getSongs())
+					retval = retval + s.toString();
+		
+		return retval;
+	}
+	
+	private String searchAlbumTitle(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums) {
+			if(val.equals(a.getName())) {
+				retval = retval + a.toString();
+				for(Song s: a.getSongs())
+					retval = retval + s.getTitle() + "\n";
+			}
+		}
+		return retval;
+	}
+	
+	private String searchAlbumArtist(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums) {
+			if(val.equals(a.getArtist())) {
+				retval = retval + a.toString();
+				for(Song s: a.getSongs())
+					retval = retval + s.getTitle() + "\n";
+			}
+		}
+		return retval;
+	}
+	// this might just be temporary, idk if theres a real need for this
+	ArrayList<Album> getAlbums(){		
+		return new ArrayList<Album>(albums);
+	}
+
 }
