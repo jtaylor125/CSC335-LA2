@@ -3,6 +3,7 @@ package model;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MusicStore {
@@ -38,15 +39,15 @@ public class MusicStore {
 			}
 			
 			
-			String songInfo[]  = currFile.next().split(",");
+			String songInfo[]  = currFile.nextLine().split(",");
 			ArrayList<Song> songArr = new ArrayList<>();
 			
-			while(currFile.hasNext()) {
+			while(currFile.hasNextLine()) {
 				Song temp = new Song(currFile.next(), songInfo[1], songInfo[0]);
 				songArr.add(temp);
 			}
 			
-			albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[4], songArr));
+			albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[3], songArr));
 		}
 		
 		return albums;
@@ -59,8 +60,8 @@ public class MusicStore {
 	private ArrayList<String> getFileNames(Scanner file) {
 		ArrayList<String> retArr = new ArrayList<>();
 		
-		while(file.hasNext()){
-			String temp[] = file.next().split(",");
+		while(file.hasNextLine()){
+			String temp[] = file.nextLine().split(",");
 			StringBuffer sb = new StringBuffer();
 			
 			sb.append(temp[0]);
@@ -72,5 +73,10 @@ public class MusicStore {
 		}
 		
 		return retArr;
+	}
+	
+	// should probably return a copy? songs are mutable?
+	ArrayList<Album> getAlbums(){		
+		return albums;
 	}
 }
