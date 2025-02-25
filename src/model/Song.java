@@ -2,9 +2,9 @@ package model;
 
 public class Song {
 
-	private String title;
-	private String artist;
-	private String album;
+	private final String title;
+	private final String artist;
+	private final String album;
 	
 	private boolean favorite;
 	

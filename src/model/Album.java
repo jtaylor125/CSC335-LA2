@@ -3,13 +3,12 @@ package model;
 import java.util.ArrayList;
 
 public class Album {
-
-	private ArrayList<Song> songList;
+	private final ArrayList<Song> songList;
 	
-	private String name;
-	private String artist;
-	private String genre;
-	private String year;
+	private final String name;
+	private final String artist;
+	private final String genre;
+	private final String year;
 	
 	public Album(String name, String artist, String genre, String year, ArrayList<Song> songs) {
 		this.name   = name;
@@ -33,6 +32,10 @@ public class Album {
 	}
 	public String getYear() {
 		return this.year;
+	}
+	
+	ArrayList<Song> getSongs(){
+		return songList;
 	}
 	
 	@Override
