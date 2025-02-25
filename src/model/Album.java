@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class Album {
 
+	/*
+	 * 		Instance Variables
+	 */
 	private ArrayList<Song> songList;
 	
 	private String name;
@@ -11,6 +14,9 @@ public class Album {
 	private String genre;
 	private String year;
 	
+	/*
+	 * 		Constructor
+	 */
 	public Album(String name, String artist, String genre, String year, ArrayList<Song> songs) {
 		this.name   = name;
 		this.artist = artist;
@@ -21,7 +27,9 @@ public class Album {
 	}
 	
 	
-	
+	/*
+	 * 		Getters
+	 */
 	public String getName() {
 		return this.name;
 	}
@@ -35,9 +43,15 @@ public class Album {
 		return this.year;
 	}
 	
+	public ArrayList<Song> getSongs(){
+		return new ArrayList<Song>(this.songList);
+	}
+	
+	
+	
 	@Override
 	public String toString() {
-		String retval =   "Album:  " + this.name   + "\n"
+		String retval =  this.name   + "\n"
 						+ "Artist: " + this.artist + "\n"
 						+ "Genre:  " + this.genre  + "\n"
 						+ "Year:   " + this.year   + "\n";

@@ -6,10 +6,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MusicStore {
+	/*
+	 * 		Setters
+	 */
 	ArrayList<Album> albums;
 	
 	
-	// Constructor
+	/*
+	 * 		Constructor
+	 */
 	public MusicStore() {
 		Scanner inFile = null;
 		try {
@@ -25,11 +30,23 @@ public class MusicStore {
 	}
  
 	
+	/*
+	 * 		Constructor helper functions
+	 */
+	
+	/*
+	 * creates the main storage of all information
+	 * in the MusicStore by going through the files
+	 * in the passed list and instantiating every 
+	 * song and every album 
+	 * Returns the ArrayList of albums for the constructor
+	 */
 	private ArrayList<Album> createAlbums(ArrayList<String> files) {
 		ArrayList<Album> albums = new ArrayList<>();
 		Scanner currFile = null;
 		
 		for(String f : files) {
+			// try loading in file, exit if it doesn't exist
 			try {
 				currFile = new Scanner(new File(f));
 			} catch(FileNotFoundException e) {
@@ -37,20 +54,26 @@ public class MusicStore {
 				System.exit(1);
 			}
 			
-			
+			// local variables to the for loop, loaded in for
+			// each file
 			String songInfo[]  = currFile.next().split(",");
 			ArrayList<Song> songArr = new ArrayList<>();
 			
+			// go through the rest of the lines and create song
+			// array for the Album object
 			while(currFile.hasNext()) {
 				Song temp = new Song(currFile.next(), songInfo[1], songInfo[0]);
 				songArr.add(temp);
 			}
 			
+			// add a newly constructed album object from
+			// information parsed from file to albums array
 			albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[4], songArr));
 		}
 		
 		return albums;
 	}
+	
 	/*
 	 * Parses the file names from the information
 	 * in albums.txt
@@ -73,4 +96,12 @@ public class MusicStore {
 		
 		return retArr;
 	}
+	
+	/*
+	 * 		Search Methods
+	 */
+	public void search(String s, String songOrAlbum, String titleOrArtist) {
+		return;
+	}
+	
 }
