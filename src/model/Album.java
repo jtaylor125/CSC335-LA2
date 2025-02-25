@@ -3,13 +3,23 @@ package model;
 import java.util.ArrayList;
 
 public class Album {
+
+
+	/*
+	 * 		Instance Variables
+	 */
+
 	private final ArrayList<Song> songList;
+
 	
 	private final String name;
 	private final String artist;
 	private final String genre;
 	private final String year;
 	
+	/*
+	 * 		Constructor
+	 */
 	public Album(String name, String artist, String genre, String year, ArrayList<Song> songs) {
 		this.name   = name;
 		this.artist = artist;
@@ -20,7 +30,9 @@ public class Album {
 	}
 	
 	
-	
+	/*
+	 * 		Getters
+	 */
 	public String getName() {
 		return this.name;
 	}
@@ -32,15 +44,16 @@ public class Album {
 	}
 	public String getYear() {
 		return this.year;
-	}
-	
-	ArrayList<Song> getSongs(){
+	}	
+
+	public ArrayList<Song> getSongs(){
 		return songList;
 	}
 	
+
 	@Override
 	public String toString() {
-		String retval =   "Album:  " + this.name   + "\n"
+		String retval =  this.name   + "\n"
 						+ "Artist: " + this.artist + "\n"
 						+ "Genre:  " + this.genre  + "\n"
 						+ "Year:   " + this.year   + "\n";

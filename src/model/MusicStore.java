@@ -7,10 +7,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MusicStore {
+	/*
+	 * 		Instance Variables
+	 */
 	ArrayList<Album> albums;
 	
 	
-	// Constructor
+	/*
+	 * 		Constructor
+	 */
 	public MusicStore() {
 		Scanner inFile = null;
 		try {
@@ -26,11 +31,23 @@ public class MusicStore {
 	}
  
 	
+	/*
+	 * 		Constructor helper functions
+	 */
+	
+	/*
+	 * creates the main storage of all information
+	 * in the MusicStore by going through the files
+	 * in the passed list and instantiating every 
+	 * song and every album 
+	 * Returns the ArrayList of albums for the constructor
+	 */
 	private ArrayList<Album> createAlbums(ArrayList<String> files) {
 		ArrayList<Album> albums = new ArrayList<>();
 		Scanner currFile = null;
 		
 		for(String f : files) {
+			// try loading in file, exit if it doesn't exist
 			try {
 				currFile = new Scanner(new File(f));
 			} catch(FileNotFoundException e) {
@@ -38,20 +55,28 @@ public class MusicStore {
 				System.exit(1);
 			}
 			
-			
+			// local variables to the for loop, loaded in for
+			// each file
 			String songInfo[]  = currFile.nextLine().split(",");
 			ArrayList<Song> songArr = new ArrayList<>();
 			
+			// go through the rest of the lines and create song
+			// array for the Album object			
 			while(currFile.hasNextLine()) {
-				Song temp = new Song(currFile.next(), songInfo[1], songInfo[0]);
+				Song temp = new Song(currFile.nextLine(), songInfo[1], songInfo[0]);
 				songArr.add(temp);
 			}
 			
+
+			// add a newly constructed album object from
+			// information parsed from file to albums array
 			albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[3], songArr));
+
 		}
 		
 		return albums;
 	}
+	
 	/*
 	 * Parses the file names from the information
 	 * in albums.txt
@@ -74,9 +99,73 @@ public class MusicStore {
 		
 		return retArr;
 	}
-	
-	// should probably return a copy? songs are mutable?
-	ArrayList<Album> getAlbums(){		
-		return albums;
+
+	/*
+	 * 		Search Methods
+	 */
+	public String search(String s, String songOrAlbum, String titleOrArtist) {
+		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Title"))
+			return searchSongTitle(s);
+		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Artist"))
+			return searchSongArtist(s);
+		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Title"))
+			return searchAlbumTitle(s);
+		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Artist"))
+			return searchAlbumArtist(s);
+		
+		return "Incorrect parameters sent, check code\n";
 	}
+	
+	private String searchSongTitle(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums) 
+			for(Song s : a.getSongs()) 
+				if(val.equals(s.getTitle())) 
+					retval = retval + s.toString();
+
+		return retval;
+	}
+	
+	private String searchSongArtist(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums)
+			if(val.equals(a.getArtist()))
+				for(Song s : a.getSongs())
+					retval = retval + s.toString();
+		
+		return retval;
+	}
+	
+	private String searchAlbumTitle(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums) {
+			if(val.equals(a.getName())) {
+				retval = retval + a.toString();
+				for(Song s: a.getSongs())
+					retval = retval + s.getTitle() + "\n";
+			}
+		}
+		return retval;
+	}
+	
+	private String searchAlbumArtist(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums) {
+			if(val.equals(a.getArtist())) {
+				retval = retval + a.toString();
+				for(Song s: a.getSongs())
+					retval = retval + s.getTitle() + "\n";
+			}
+		}
+		return retval;
+	}
+	// this might just be temporary, idk if theres a real need for this
+	ArrayList<Album> getAlbums(){		
+		return new ArrayList<Album>(albums);
+	}
+
 }
