@@ -27,7 +27,17 @@ public class Main {
 			if(command.equals("Help"))
 				printCommandList();
 			else if(command.equals("Search"))
-				searchCommand(systemIn, store);
+				searchCommand(systemIn, store, library);
+			else if (command.equals("Add"))
+				addCommand(systemIn, store, library);
+			else if (command.equals("List"))
+				listCommand(systemIn, library);
+			else if (command.equals("Playlist"))
+				playlistCommand(systemIn, library);
+			else if (command.equals("Favorite"))
+				favoriteCommand(systemIn, library);
+			else if (command.equals("Rate"))
+				rateCommand(systemIn, library);
 			
 			System.out.println("Ready for next command:");
 			command = systemIn.nextLine();
@@ -58,14 +68,30 @@ public class Main {
 		System.out.println("Allows you to rate a song from the Library on a scale of 1-5");
 	}
 	
-	public static void searchCommand(Scanner s, MusicStore ms) {
+	public static void searchCommand(Scanner s, MusicStore ms, LibraryModel library) {
 		System.out.println("Would you like to search your Library or the Music Store?");
 		System.out.println("Enter \"Library\" or \"Store\" or anything else to go back");
 		
 		String answer = s.nextLine().strip();
 		
 		if(answer.equals("Library")) {
-			// TODO add search functionality for Library
+			System.out.println("Would you like to search Songs or Albums?");
+			System.out.println("Enter \"Song\" or \"Album\"");
+			String songOrAlbum = s.nextLine().strip();
+			
+			System.out.println("Would you like to search by Title or Artist?");
+			System.out.println("Enter \"Title\" or \"Artist\"");
+			String titleOrArtist = s.nextLine().strip();
+			
+			System.out.printf("Enter the %s of the %s to search for \n", titleOrArtist, songOrAlbum);
+			String key = s.nextLine().strip();
+			
+			String searchResults = library.search(key, songOrAlbum, titleOrArtist);
+			
+			if("".equals(searchResults))
+				System.out.printf("No %ss of %s found\n", songOrAlbum, titleOrArtist);
+			else
+				System.out.println(searchResults);
 		} else if (answer.equals("Store")) {
 			System.out.println("Would you like to search Songs or Albums?");
 			System.out.println("Enter \"Song\" or \"Album\"");
@@ -86,6 +112,169 @@ public class Main {
 				System.out.println(searchResults);
 			
 		} else {
+			System.out.println("Going back...");
+		}
+	}
+	
+	public static void addCommand(Scanner s, MusicStore ms, LibraryModel library) {
+		System.out.println("Would you like to add a Song or an Album?");
+		System.out.println("Enter \"Song\" or \"Album\" or anything else to go back");
+		
+		String answer = s.nextLine().strip();
+		
+		if (answer.equals("Song")) {
+			System.out.println("What song would you like to add? (Ex: \"Tired\"");
+			
+			String song = s.nextLine().strip();
+			
+			if (ms.checkSongInStore(song)) {
+				if (library.getSongTitles().contains(song)) {
+					System.out.println("Song already in library!");
+				} else {
+					library.addSong(song);
+					System.out.println("Successfully added");
+				}
+			} else {
+				System.out.printf("%s not found in store\n", song);
+			}
+		} else if (answer.equals("Album")) {
+			System.out.println("What album would you like to add? (Ex: \"Begin Again\"");
+			
+			String album = s.nextLine().strip();
+			
+			if (ms.checkAlbumInStore(album)) {
+				if (library.getAlbums().contains(album)) {
+					System.out.println("Album already in library!");
+				} else {
+					library.addSong(album);
+					System.out.println("Successfully added");
+				}
+			} else {
+				System.out.printf("%s not found in store\n", album);
+			}
+		} else {
+			System.out.println("Going back...");
+		}
+	}
+	
+	public static void listCommand(Scanner s, LibraryModel library) {
+		System.out.println("What would you like to list?");
+		System.out.println("Enter \"Songs\", \"Artists\", \"Albums\", \"Playlists\", \"Favorites\", or anything else to go back");
+		
+		String answer = s.nextLine().strip();
+		
+		if (answer.equals("Songs")) {
+			System.out.println(library.getSongTitles());
+		} else if (answer.equals("Artists")) {
+			System.out.println(library.getArtists());
+		} else if (answer.equals("Albums")) {
+			System.out.println(library.getAlbums());
+		} else if (answer.equals("Playlists")) {
+			System.out.println(library.getPlaylists());
+		} else if (answer.equals("Favorites")) {
+			System.out.println(library.getFavoriteSongs());
+		} else {
+			System.out.println("Going back...");
+		}
+	}
+	
+	public static void playlistCommand(Scanner s, LibraryModel library) {
+		System.out.println("Which playlist action do you want to take?");
+		System.out.println("Enter \"Create\", \"Add Song\", \"Remove Song\", or anything else to go back");
+		
+		String answer = s.nextLine().strip();
+		
+		if (answer.equals("Create")) {
+			System.out.println("Enter your new playlist's name:");
+			String name = s.nextLine().strip();
+			
+			if (name.length() != 0) {
+				library.createPlaylist(name);
+				System.out.println("Playlist created");
+			} else {
+				System.out.println("No name entered");
+			}
+		} else if (answer.equals("Add Song")) {
+			System.out.println("Enter the playlist you want to add to:");
+			String playlistName = s.nextLine().strip();
+			
+			if (library.checkPlaylistExistence(playlistName)) {
+				System.out.println("Enter the song you want to add:");
+				String songName = s.nextLine().strip();
+				
+				if (library.checkSongInLibrary(songName)) {
+					library.addToPlaylist(songName, playlistName);
+				} else {
+					System.out.println("Song not found");
+				}
+			} else {
+				System.out.println("Playlist not found");
+			}
+		} else if (answer.equals("Remove Song")) {
+			System.out.println("Enter the playlist you want to remove from:");
+			String playlistName = s.nextLine().strip();
+			
+			if (library.checkPlaylistExistence(playlistName)) {
+				System.out.println("Enter the song you want to remove:");
+				String songName = s.nextLine().strip();
+				
+				if (library.checkSongInLibrary(songName)) {
+					if (library.checkSongInPlaylist(songName, playlistName)) {
+						library.removeFromPlaylist(songName, playlistName);
+					} else {
+						System.out.println("Song not found in playlist");
+					}
+				} else {
+					System.out.println("Song not found in library");
+				}
+			} else {
+				System.out.println("Playlist not found");
+			}
+		} else {
+			System.out.println("Going back...");
+		}
+	}
+	
+	public static void favoriteCommand(Scanner s, LibraryModel library) {
+		System.out.println("What song would you like to favorite? (Example: \"Tired\")");
+		System.out.println("Enter anything else to go back");
+		
+		String answer = s.nextLine().strip();
+		
+		if (library.checkSongInLibrary(answer)) {
+			library.markFavorite(answer);
+			System.out.println("Favorites updated");
+		} else {
+			System.out.println("Song not found");
+			System.out.println("Going back...");
+		}
+	}
+	
+	public static void rateCommand(Scanner s, LibraryModel library) {
+		System.out.println("What song would you like to rate? (Example: \"Tired\")");
+		System.out.println("Enter anything else to go back");
+		
+		String answer = s.nextLine().strip();
+		
+		if (library.checkSongInLibrary(answer)) {
+			System.out.printf("What would you like to rate %s? Enter an integer from 1 to 5",answer);
+			System.out.println("");
+			
+			String rating = s.nextLine().strip();
+			try {
+				int ratingInt = Integer.parseInt(rating);
+				if (ratingInt < 1 || ratingInt > 5) {
+					System.out.println("Input was not between 1 and 5");
+				} else {
+					library.rateSong(answer, ratingInt);
+					System.out.println("Rating updated");
+				}
+				
+			} catch (NumberFormatException e) {
+				System.out.println("Input was not an integer");
+			}
+		} else {
+			System.out.println("Song not found");
 			System.out.println("Going back...");
 		}
 	}
