@@ -132,17 +132,17 @@ public class LibraryModel {
 	
 	// get list of albums in whole library
 	public String getAlbums(){
-		ArrayList<String> albums = new ArrayList<String>();
+		ArrayList<String> albumsReturn = new ArrayList<String>();
 		
 		// need to add getAlbum to song
-		for (int i=0; i<library.size();i++) {
-			if (!albums.contains(library.get(i).getAlbum())) {
-				albums.add(library.get(i).getAlbum());
+		for (int i=0; i<albums.size();i++) {
+			if (!albumsReturn.contains(albums.get(i))) {
+				albumsReturn.add(albums.get(i).getName());
 			}
 		}
 		
 		String retval = "";
-		for (String a : albums)
+		for (String a : albumsReturn)
 			retval = retval + a + "\n";
 		
 		return retval;
@@ -210,6 +210,16 @@ public class LibraryModel {
 		}
 	}
 	
+	int playlistLength(String playlistName) {
+		int playlistLength = -1;
+		for (int i=0; i < playlistList.size(); i++) {
+			if (playlistList.get(i).getName().equals(playlistName)) {
+				playlistLength = playlistList.get(i).getSize();
+			}
+		}
+		return playlistLength;
+	}
+	
 	public boolean checkPlaylistExistence(String playlistName) {
 		for (Playlist p : playlistList)
 			if (p.getName().equals(playlistName)) {
@@ -254,6 +264,11 @@ public class LibraryModel {
 				library.get(i).rate(rating);
 			}
 		}
+	}
+	
+	int getSongRating(String songName, String artist) {
+		Song song = this.getSong(songName, artist);
+		return song.getRating();
 	}
 	
 	private Song getSong(String title, String artist) {

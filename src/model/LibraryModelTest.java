@@ -74,9 +74,10 @@ class LibraryModelTest {
 	
 	@Test
 	void testAlbumTitleSearch() {
+		LibraryModel library = new LibraryModel();
 		MusicStore ms = new MusicStore();
-		
-		String search = ms.search("Sons", "Album", "Title");
+		library.addAlbum("Sons", "The Heavy", ms);
+		String search = library.search("Sons", "Album", "Title");
 		String expected = "Sons\n"
 				+ "Artist: The Heavy\n"
 				+ "Genre:  Rock\n"
@@ -91,15 +92,17 @@ class LibraryModelTest {
 				+ "Simple Things\n"
 				+ "A Whole Lot of Love\n"
 				+ "What Don't Kill You\n"
-				+ "Burn Bright\n\n";
+				+ "Burn Bright\n";
 		assertEquals(search,expected);
 	}
 	
 	@Test
 	void testAlbumArtistSearch() {
+		LibraryModel library = new LibraryModel();
 		MusicStore ms = new MusicStore();
+		library.addAlbum("Sons", "The Heavy", ms);
 		
-		String search = ms.search("The Heavy", "Album", "Artist");
+		String search = library.search("The Heavy", "Album", "Artist");
 		String expected = "Sons\n"
 				+ "Artist: The Heavy\n"
 				+ "Genre:  Rock\n"
@@ -114,7 +117,228 @@ class LibraryModelTest {
 				+ "Simple Things\n"
 				+ "A Whole Lot of Love\n"
 				+ "What Don't Kill You\n"
-				+ "Burn Bright\n\n";
+				+ "Burn Bright\n";
 		assertEquals(search,expected);
+	}
+	
+	@Test
+	void testIncorrectParamsSearch() {
+		LibraryModel library = new LibraryModel();
+		String search = library.search("Tired", "S", "title");
+		assertEquals(search,"Incorrect parameters sent, check code\n");
+	}
+	
+	@Test
+	void testGetSongTitles() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		
+		String titles = library.getSongTitles();
+		
+		String expected = "Tired\nUh Oh\nSelva Negra\n";
+		assertEquals(titles,expected);
+	}
+	
+	@Test
+	void testGetArtists() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		String artists = library.getArtists();
+		
+		String expected = "Adele\nNorah Jones\nMana\n";
+		assertEquals(artists,expected);
+	}
+	
+	@Test
+	void testGetAlbums() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.addAlbum("Begin Again", "Norah Jones", ms);
+		library.addAlbum("Sons", "The Heavy", ms);
+		
+		String albums = library.getAlbums();
+		
+		String expected = "Begin Again\nSons\n";
+		System.out.println("START");
+		System.out.println(albums);
+		System.out.println("END");
+		assertEquals(albums,expected);
+	}
+	
+	@Test
+	void testCreateGetPlaylists() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.createPlaylist("Mana");
+		library.createPlaylist("Other");
+		
+		assertEquals(0, library.playlistLength("Mana"));
+		assertEquals(0, library.playlistLength("Other"));
+		
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Ana", "Mana", "Mana");
+		
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
+		
+		assertEquals(2, library.playlistLength("Mana"));
+		assertEquals(1, library.playlistLength("Other"));
+		
+		String playlists = library.getPlaylists();
+		String expected = "Mana\nOther\n";
+		assertEquals(playlists,expected);
+	}
+	
+	@Test
+	void testRemoveFromPlaylist() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.createPlaylist("Mana");
+		library.createPlaylist("Other");
+		
+		assertEquals(0, library.playlistLength("Mana"));
+		assertEquals(0, library.playlistLength("Other"));
+		
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Ana", "Mana", "Mana");
+		
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
+		
+		assertEquals(2, library.playlistLength("Mana"));
+		assertEquals(1, library.playlistLength("Other"));
+		
+		library.removeFromPlaylist("Selva Negra", "Mana", "Mana");
+		library.removeFromPlaylist("Uh Oh", "Norah Jones", "Other");
+		
+		assertEquals(1, library.playlistLength("Mana"));
+		assertEquals(0, library.playlistLength("Other"));
+	}
+	
+	@Test
+	void testCheckPlaylistExistence() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		assertFalse(library.checkPlaylistExistence("Mana"));
+		assertFalse(library.checkPlaylistExistence("Other"));
+		
+		library.createPlaylist("Mana");
+		library.createPlaylist("Other");
+		
+		assertTrue(library.checkPlaylistExistence("Mana"));
+		assertTrue(library.checkPlaylistExistence("Other"));
+		
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Ana", "Mana", "Mana");
+		
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
+		
+		assertTrue(library.checkPlaylistExistence("Mana"));
+		assertTrue(library.checkPlaylistExistence("Other"));
+	}
+	
+	@Test
+	void testCheckSongInPlaylist() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.createPlaylist("Mana");
+		library.createPlaylist("Other");
+		
+		assertFalse(library.checkSongInPlaylist("Selva Negra", "Mana"));
+		assertFalse(library.checkSongInPlaylist("Uh Oh", "Other"));
+		
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Ana", "Mana", "Mana");
+		
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
+		
+		assertTrue(library.checkSongInPlaylist("Selva Negra", "Mana"));
+		assertTrue(library.checkSongInPlaylist("Uh Oh", "Other"));
+		
+		assertFalse(library.checkSongInPlaylist("Uh Oh", "Final"));
+	}
+	
+	@Test
+	void testMarkGetFavorite() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.markFavorite("Tired", "Adele");
+		library.markFavorite("Ana", "Mana");
+		
+		String favorites = library.getFavoriteSongs();
+		String expected = "Tired\nAna\n";
+		assertEquals(favorites,expected);
+	}
+	
+	@Test
+	void testRating() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.rateSong("Selva Negra", "Mana", 4);
+		library.rateSong("Ana", "Mana", 5);
+		library.rateSong("Tired", "Adele", 3);
+		library.rateSong("Uh Oh", "Norah Jones", 1);
+		
+		assertEquals(library.getSongRating("Selva Negra","Mana"),4);
+		assertEquals(library.getSongRating("Ana","Mana"),5);
+		assertEquals(library.getSongRating("Tired","Adele"),3);
+		assertEquals(library.getSongRating("Uh Oh","Norah Jones"),1);
+		
+		String favorites = library.getFavoriteSongs();
+		String expected = "Ana\n";
+		assertEquals(favorites,expected);
+	}
+	
+	@Test
+	void testSongInLibrary() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		
+		assertTrue(library.checkSongInLibrary("Tired"));
+		assertTrue(library.checkSongInLibrary("Uh Oh"));
+		assertFalse(library.checkSongInLibrary("Ana"));
 	}
 }
