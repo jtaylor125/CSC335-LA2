@@ -1,5 +1,17 @@
 package model;
 
+/*
+ * File:	LibraryModel.java
+ * Project: LA1-MusicLibrary
+ * Author:	Jacob Taylor
+ * Editor:	Tristan Emma
+ * Purpose:	Contains main Library functionality. 
+ * 			i.e. stores songs added, albums added, and created playlists
+ * 				 allows for adding, favoriting and rating songs
+ * 				 allows for creation and editing of playlists
+ * 				 has searching and listing capabilities for within Library
+ */
+
 import java.util.ArrayList;
 
 public class LibraryModel {
@@ -140,11 +152,9 @@ public class LibraryModel {
 	public String getAlbums(){
 		ArrayList<String> albumsReturn = new ArrayList<String>();
 		
-		// need to add getAlbum to song
-		for (int i=0; i<albums.size();i++) {
-			if (!albumsReturn.contains(albums.get(i))) {
-				albumsReturn.add(albums.get(i).getName());
-			}
+		
+		for(Album a : albums) {
+			albumsReturn.add(a.getName());
 		}
 		
 		String retval = "";

@@ -4,7 +4,7 @@ package model;
  * File:	MusicStore.java
  * Project: LA1-MusicLibrary
  * Author:	Tristan Emma
- * Edited:	Jacob Taylor
+ * Editor:	Jacob Taylor
  * Purpose:	Contains main store functionality, and houses the
  * 			process for building out all the information
  * 			stored in the store.
@@ -80,7 +80,14 @@ public class MusicStore {
 
 			// add a newly constructed album object from
 			// information parsed from file to albums array
-			albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[3], songArr));
+			// iff the album with that name and artist does not exist
+			boolean alreadyExists = false;
+			for(Album a : albums) 
+				if(songInfo[0].equals(a.getName()) && songInfo[1].equals(a.getArtist()))
+					alreadyExists = true;
+			
+			if(!alreadyExists)
+				albums.add(new Album(songInfo[0], songInfo[1], songInfo[2], songInfo[3], songArr));
 
 		}
 		

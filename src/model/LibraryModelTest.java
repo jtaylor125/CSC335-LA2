@@ -1,9 +1,6 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.Test;
 
 class LibraryModelTest {
@@ -15,11 +12,11 @@ class LibraryModelTest {
 		
 		library.addSong("Tired", "Adele", ms);
 		
-		assertTrue(library.checkSongInLibrary("Tired"));
+		assertTrue(library.checkSongInLibrary("Tired", "Adele"));
 		
 		library.addSong("Selva Negra", "Mana", ms);
 		
-		assertTrue(library.checkSongInLibrary("Selva Negra"));
+		assertTrue(library.checkSongInLibrary("Selva Negra", "Mana"));
 	}
 	
 	@Test
@@ -29,10 +26,10 @@ class LibraryModelTest {
 		
 		library.addAlbum("Begin Again", "Norah Jones", ms);
 		
-		assertTrue(library.checkSongInLibrary("Uh Oh"));
-		assertTrue(library.checkSongInLibrary("Just a Little Bit"));
-		assertTrue(library.checkSongInLibrary("Wintertime"));
-		assertTrue(library.checkSongInLibrary("My Heart Is Full"));
+		assertTrue(library.checkSongInLibrary("Uh Oh", "Norah Jones"));
+		assertTrue(library.checkSongInLibrary("Just a Little Bit", "Norah Jones"));
+		assertTrue(library.checkSongInLibrary("Wintertime", "Norah Jones"));
+		assertTrue(library.checkSongInLibrary("My Heart Is Full", "Norah Jones"));
 		
 	}
 	
@@ -275,18 +272,18 @@ class LibraryModelTest {
 		library.createPlaylist("Mana");
 		library.createPlaylist("Other");
 		
-		assertFalse(library.checkSongInPlaylist("Selva Negra", "Mana"));
-		assertFalse(library.checkSongInPlaylist("Uh Oh", "Other"));
+		assertFalse(library.checkSongInPlaylist("Selva Negra", "Mana", "Mana"));
+		assertFalse(library.checkSongInPlaylist("Uh Oh", "Norah Jones", "Other"));
 		
 		library.addToPlaylist("Selva Negra", "Mana", "Mana");
 		library.addToPlaylist("Ana", "Mana", "Mana");
 		
 		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
 		
-		assertTrue(library.checkSongInPlaylist("Selva Negra", "Mana"));
-		assertTrue(library.checkSongInPlaylist("Uh Oh", "Other"));
+		assertTrue(library.checkSongInPlaylist("Selva Negra", "Mana", "Mana"));
+		assertTrue(library.checkSongInPlaylist("Uh Oh", "Norah Jones", "Other"));
 		
-		assertFalse(library.checkSongInPlaylist("Uh Oh", "Final"));
+		assertFalse(library.checkSongInPlaylist("Uh Oh", "Norah Jones", "Final"));
 	}
 	
 	@Test
@@ -337,8 +334,8 @@ class LibraryModelTest {
 		library.addSong("Tired", "Adele", ms);
 		library.addSong("Uh Oh", "Norah Jones", ms);
 		
-		assertTrue(library.checkSongInLibrary("Tired"));
-		assertTrue(library.checkSongInLibrary("Uh Oh"));
-		assertFalse(library.checkSongInLibrary("Ana"));
+		assertTrue(library.checkSongInLibrary("Tired", "Adele"));
+		assertTrue(library.checkSongInLibrary("Uh Oh", "Norah Jones"));
+		assertFalse(library.checkSongInLibrary("Ana", "Mana"));
 	}
 }

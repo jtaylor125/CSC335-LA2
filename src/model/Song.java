@@ -4,6 +4,7 @@ package model;
  * File:	Song.java
  * Project: LA1-MusicLibrary
  * Author:	Tristan Emma
+ * Editor:	Jacob Taylor
  * Purpose:	Song object used in the program. Stores
  * 			name, artist, and album name of each song
  * 			and stores rating (if there is one) and 

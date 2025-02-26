@@ -2,29 +2,12 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
 class MusicStoreTest {
 
-	@Test
-	void testBasic() {
-		MusicStore ms = new MusicStore();
-		ArrayList<Album> albums = ms.getAlbumsFromStore("Sons","The Heavy");
-		albums.add(ms.getAlbumsFromStore("21", "Adele").get(0));
-		albums.add(ms.getAlbumsFromStore("19", "Adele").get(0));
-		albums.add(ms.getAlbumsFromStore("Coat of Many Colors", "Dolly Parton").get(0));
-		/*
-		*for(Album a : albums) {
-		*	System.out.println(a.toString());
-		*	for(Song s : a.getSongs())
-		*		System.out.println(s.toString());
-		*}
-		*/
 
-		assertTrue(albums.size() == 4);
-	}
 	
 	@Test
 	void testSongTitleSearch() {
@@ -187,17 +170,17 @@ class MusicStoreTest {
 	@Test
 	void testMatchSongs() {
 		MusicStore ms = new MusicStore();
-		ArrayList<Song> matches = ms.getSongsFromStore("Tired","Adele");
-		assertTrue(matches.size() == 1);
-		assertTrue(matches.get(0).getTitle().equals("Tired"));
+		Song matches = ms.getSong("Tired","Adele");
+		assertTrue(matches.getArtist().equals("Adele"));
+		assertTrue(matches.getTitle().equals("Tired"));
 	}
 	
 	@Test
 	void testMatchAlbums() {
 		MusicStore ms = new MusicStore();
-		ArrayList<Album> matches = ms.getAlbumsFromStore("Sons","The Heavy");
-		assertTrue(matches.size() == 1);
-		assertTrue(matches.get(0).getName().equals("Sons"));
+		Album match = ms.getAlbum("Sons","The Heavy");
+		assertTrue(match.getName().equals("Sons"));
+		assertTrue(match.getArtist().equals("The Heavy"));
 	
 	}
 	

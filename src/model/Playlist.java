@@ -1,5 +1,15 @@
 package model;
 
+/*
+ * File:	Playlist.java
+ * Project: LA1-MusicLibrary
+ * Author:	Jacob Taylor
+ * Editor:	Tristan Emma
+ * Purpose:	Playlist objects store a list of songs in the
+ * 			order they are added. They have a name that is
+ * 			used to identify them
+ */
+
 import java.util.ArrayList;
 
 public class Playlist {
