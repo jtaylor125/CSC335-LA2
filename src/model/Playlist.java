@@ -24,9 +24,9 @@ public class Playlist {
 		}
 	}
 	
-	public boolean checkSongInPlaylist(String songName) {
+	public boolean hasSong(Song song) {
 		for (Song s : playlist)
-			if(s.getTitle().equals(songName)) {
+			if(s.equals(song)) {
 				return true;
 			}
 		return false;

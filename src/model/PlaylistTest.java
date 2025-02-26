@@ -72,8 +72,8 @@ class PlaylistTest {
 		
 		playlist.add(t0);
 		
-		assertTrue(playlist.checkSongInPlaylist("I Saw Her Standing There"));
-		assertFalse(playlist.checkSongInPlaylist("Misery"));
+		assertTrue(playlist.hasSong(t0));
+		assertFalse(playlist.hasSong(t1));
 	}
 	
 	@Test

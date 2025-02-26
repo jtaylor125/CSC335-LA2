@@ -190,27 +190,26 @@ public class MusicStore {
 		return false;
 	}
 	
-	ArrayList<Song> getSongsFromStore(String songName, String artist){
-		ArrayList<Song> songs = new ArrayList<Song>();
+	public Song getSong(String songName, String artist){
+		
 		
 		for (Album a : albums)
 			for (Song s : a.getSongs())
 				if (s.getTitle().equals(songName) && s.getArtist().equals(artist))
-					songs.add(s);
+					return s;
 
-		return songs;
+		return null;
 	}
 	
-	ArrayList<Album> getAlbumsFromStore(String albumName, String artist){
-		ArrayList<Album> getAlbums = new ArrayList<Album>();
+	public Album getAlbum(String albumName, String artist){
 		
 		for (Album a : albums) {
 			System.out.println(a.getName());
 			if (a.getName().equals(albumName) && a.getArtist().equals(artist))
-				getAlbums.add(a);
+				return a;
 		}
 
-		return getAlbums;
+		return null;
 	}
 
 }
