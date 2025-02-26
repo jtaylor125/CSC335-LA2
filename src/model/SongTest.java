@@ -48,4 +48,13 @@ class SongTest {
 		
 		assertTrue(s.isFavorite());
 	}
+	
+	@Test
+	void testToString() {
+		Song s = new Song("22", "Taylor Swift", "Red");
+		
+		String expected = "22\nArtist: Taylor Swift\nAlbum: Red\n";
+		
+		assertEquals(s.toString(),expected);
+	}
 }
