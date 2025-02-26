@@ -15,10 +15,10 @@ public class Main {
 		
 		
 		System.out.println("Loading Music Store...");
-		LibraryModel library  = new LibraryModel();
-		
-		System.out.println("Initializing Library...");
 		MusicStore   store    = new MusicStore();
+				
+		System.out.println("Initializing Library...");
+		LibraryModel library  = new LibraryModel();
 		
 		System.out.println("To use the program type in a a command and press enter, or type \"Help\" and press enter to get started with a list of commands");
 		
@@ -38,6 +38,8 @@ public class Main {
 				favoriteCommand(systemIn, library);
 			else if (command.equals("Rate"))
 				rateCommand(systemIn, library);
+			else
+				System.out.println("Unknown Command");
 			
 			System.out.println("Ready for next command:");
 			command = systemIn.nextLine();
@@ -91,7 +93,7 @@ public class Main {
 			if("".equals(searchResults))
 				System.out.printf("No %ss of %s found\n", songOrAlbum, titleOrArtist);
 			else
-				System.out.println(searchResults);
+				System.out.print(searchResults);
 		} else if (answer.equals("Store")) {
 			System.out.println("Would you like to search Songs or Albums?");
 			System.out.println("Enter \"Song\" or \"Album\"");
@@ -109,7 +111,7 @@ public class Main {
 			if("".equals(searchResults))
 				System.out.printf("No %ss of %s found\n", songOrAlbum, titleOrArtist);
 			else
-				System.out.println(searchResults);
+				System.out.print(searchResults);
 			
 		} else {
 			System.out.println("Going back...");

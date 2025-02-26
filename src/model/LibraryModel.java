@@ -76,7 +76,7 @@ public class LibraryModel {
 	
 	// add a song from music store to library
 	public void addSong(String songName, MusicStore musicStore) {
-		ArrayList<Song> matchSongs = musicStore.matchSongsInStore(songName);
+		ArrayList<Song> matchSongs = musicStore.getSongsFromStore(songName);
 		
 		for (Song s : matchSongs)
 			library.add(s);
@@ -84,7 +84,7 @@ public class LibraryModel {
 	
 	// add a whole album from music store to library
 	public void addAlbum(String albumName, MusicStore musicStore) {
-		ArrayList<Album> matchAlbums = musicStore.matchAlbumsInStore(albumName);
+		ArrayList<Album> matchAlbums = musicStore.getAlbumsFromStore(albumName);
 		
 		for (Album a : matchAlbums) {
 			albums.add(a);

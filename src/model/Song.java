@@ -7,7 +7,7 @@ package model;
  * Purpose:	Song object used in the program. Stores
  * 			name, artist, and album name of each song
  * 			and stores rating (if there is one) and 
- * 			whether or not the song is favorited
+ * 			whether or not the song is a favorite
  * 			Each song is designed to be instantiated 
  * 			only once (i.e. no copies).
  */
