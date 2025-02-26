@@ -76,22 +76,28 @@ public class LibraryModel {
 	
 	// add a song from music store to library
 	public void addSong(String songName, String artist, MusicStore musicStore) {
-		ArrayList<Song> matchSongs = musicStore.getSongsFromStore(songName,artist);
+		Song song = musicStore.getSong(songName,artist);
 		
-		for (Song s : matchSongs)
-			library.add(s);
+		if (song != null)
+			library.add(song);
+		else
+			System.out.println("Song not found, check spelling");
 	}
 	
 	// add a whole album from music store to library
 	public void addAlbum(String albumName, String artist, MusicStore musicStore) {
-		ArrayList<Album> matchAlbums = musicStore.getAlbumsFromStore(albumName, artist);
-		
-		for (Album a : matchAlbums) {
-			albums.add(a);
-			for (Song s : a.getSongs())
-				if (!library.contains(s))
-					library.add(s);
+		Album album = musicStore.getAlbum(albumName, artist);
+	
+		if(album == null) {
+			System.out.println("Album not found, check spelling");
+			return;
 		}
+			
+		albums.add(album);
+		
+		for (Song s : album.getSongs())
+			if (!library.contains(s))
+				library.add(s);
 	}
 	
 	// get list of song titles in whole library
@@ -186,6 +192,11 @@ public class LibraryModel {
 	
 	// create a playlist and add it to list of playlists
 	public void createPlaylist(String playlistName) {
+		Playlist checkExists = this.getPlaylist(playlistName);
+		if(checkExists != null) {
+			System.out.println("Playlist already exists, choose a different name");
+			return;
+		}
 		Playlist newPlaylist = new Playlist(playlistName);
 		playlistList.add(newPlaylist);
 	}
@@ -193,21 +204,35 @@ public class LibraryModel {
 	// add a song to a playlist
 	public void addToPlaylist(String songName, String artist, String playlistName) {
 		Song song = this.getSong(songName, artist);
-		for (int i=0; i < playlistList.size(); i++) {
-			if (playlistList.get(i).getName().equals(playlistName)) {
-				playlistList.get(i).add(song);
-			}
+		if (song == null) {
+			System.out.println("Song not found, check spelling");
+			return;
 		}
+		Playlist p = this.getPlaylist(playlistName);
+		if (p == null) {
+			System.out.println("Playlist not found, check spelling");
+			return;
+		}
+		
+		if(!p.hasSong(song))
+			p.add(song);
 	}
 	
 	// remove a song from a playlist
 	public void removeFromPlaylist(String songName, String artist, String playlistName) {
 		Song song = this.getSong(songName, artist);
-		for (int i=0; i < playlistList.size(); i++) {
-			if (playlistList.get(i).getName().equals(playlistName)) {
-				playlistList.get(i).removeSong(song);
-			}
+		if (song == null) {
+			System.out.println("Song not found, check spelling");
+			return;
 		}
+		Playlist p = this.getPlaylist(playlistName);
+		if (p == null) {
+			System.out.println("Playlist not found, check spelling");
+			return;
+		}
+		
+		if(p.hasSong(song))
+			p.removeSong(song);
 	}
 	
 	public boolean checkPlaylistExistence(String playlistName) {
@@ -218,42 +243,50 @@ public class LibraryModel {
 		return false;
 	}
 	
-	public boolean checkSongInPlaylist(String songName, String playlistName) {
-		for (Playlist p : playlistList)
-			if (p.getName().equals(playlistName)) {
-				return p.checkSongInPlaylist(songName);
-			}
-		return false;
+	public boolean checkSongInPlaylist(String songName, String artist, String playlistName) {
+		Song song = this.getSong(songName, artist);
+		if (song == null) {
+			System.out.println("Song not found, check spelling");
+			return false;
+		}
+		Playlist p = this.getPlaylist(playlistName);
+		if (p == null) {
+			System.out.println("Playlist not found, check spelling");
+			return false;
+		}
+		
+		return p.hasSong(song);
 	}
 	
-	public boolean checkSongInLibrary(String songName) {
-		for (Song s : library)
-			if (s.getTitle().equals(songName)) {
-				return true;
-			}
-		return false;
+	public boolean checkSongInLibrary(String songName, String artist) {
+		Song song = this.getSong(songName, artist);
+		
+		return song != null;
 	}
 	
 	// mark a song as a favorite
-	// need a markFavorite method in Song
 	public void markFavorite(String songName, String artist) {
 		Song song = this.getSong(songName, artist);
-		for (int i =0; i< library.size();i++) {
-			if (library.get(i).getTitle().equals(song.getTitle()) && library.get(i).getArtist().equals(song.getArtist())) {
-				library.get(i).setFavorite();
-			}
+
+		if (song == null) {
+			System.out.println("Song not found, check spelling");
+			return;
 		}
+		
+		song.setFavorite();
+
 	}
 	
 	// rate a song from 1 to 5
-	// need a rating method
 	public void rateSong(String songName, String artist, int rating) {
 		Song song = this.getSong(songName, artist);
-		for (int i =0; i< library.size();i++) {
-			if (library.get(i).getTitle().equals(song.getTitle()) && library.get(i).getArtist().equals(song.getArtist())) {
-				library.get(i).rate(rating);
-			}
+
+		if (song == null) {
+			System.out.println("Song not found, check spelling");
+			return;
 		}
+		
+		song.rate(rating);
 	}
 	
 	private Song getSong(String title, String artist) {
@@ -262,6 +295,14 @@ public class LibraryModel {
 				return s;
 			}
 		}
+		return null;
+	}
+	
+	private Playlist getPlaylist(String name) {
+		for(Playlist p : playlistList) 
+			if(p.getName().equals(name))
+				return p;
+		
 		return null;
 	}
 	
