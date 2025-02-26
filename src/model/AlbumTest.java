@@ -41,5 +41,13 @@ class AlbumTest {
 		
 		assertEquals(a.getSongs().get(1).getTitle(), "Misery");
 	}
-
+	
+	@Test
+	void testToString() {
+		Album a = getAlbum();
+		
+		String expected = "Please Please Me\nArtist: The Beatles\nGenre:  60s Rock\nYear:   1963\n";
+		
+		assertEquals(a.toString(),expected);
+	}
 }

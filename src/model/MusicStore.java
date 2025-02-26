@@ -196,13 +196,15 @@ public class MusicStore {
 	}
 	
 	ArrayList<Album> matchAlbumsInStore(String albumName){
-		ArrayList<Album> albums = new ArrayList<Album>();
+		ArrayList<Album> albumMatch = new ArrayList<Album>();
 		
-		for (Album a : albums)
+		for (Album a : albums) {
+			System.out.println(a.getName());
 			if (a.getName().equals(albumName))
-				albums.add(a);
+				albumMatch.add(a);
+		}
 
-		return albums;
+		return albumMatch;
 	}
 
 }
