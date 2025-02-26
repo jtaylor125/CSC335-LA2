@@ -6,13 +6,11 @@ public class LibraryModel {
 	private ArrayList<Song> library;
 	private ArrayList<Album> albums;
 	private ArrayList<Playlist> playlistList;
-	private MusicStore musicStore;
 	
 	public LibraryModel() {
 		this.library = new ArrayList<Song>();
 		this.albums = new ArrayList<Album>();
 		this.playlistList = new ArrayList<Playlist>();
-		this.musicStore = new MusicStore();
 	}
 	
 	/*
@@ -77,7 +75,7 @@ public class LibraryModel {
 	}
 	
 	// add a song from music store to library
-	public void addSong(String songName) {
+	public void addSong(String songName, MusicStore musicStore) {
 		ArrayList<Song> matchSongs = musicStore.matchSongsInStore(songName);
 		
 		for (Song s : matchSongs)
@@ -85,7 +83,7 @@ public class LibraryModel {
 	}
 	
 	// add a whole album from music store to library
-	public void addAlbum(String albumName) {
+	public void addAlbum(String albumName, MusicStore musicStore) {
 		ArrayList<Album> matchAlbums = musicStore.matchAlbumsInStore(albumName);
 		
 		for (Album a : matchAlbums) {

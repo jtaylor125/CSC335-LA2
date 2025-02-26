@@ -131,7 +131,7 @@ public class Main {
 				if (library.getSongTitles().contains(song)) {
 					System.out.println("Song already in library!");
 				} else {
-					library.addSong(song);
+					library.addSong(song, ms);
 					System.out.println("Successfully added");
 				}
 			} else {
@@ -146,7 +146,7 @@ public class Main {
 				if (library.getAlbums().contains(album)) {
 					System.out.println("Album already in library!");
 				} else {
-					library.addSong(album);
+					library.addSong(album, ms);
 					System.out.println("Successfully added");
 				}
 			} else {
