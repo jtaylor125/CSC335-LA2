@@ -12,7 +12,7 @@ public class Playlist {
 	}
 	
 	// assumes songs are immutable (check this)
-	public void addSong(Song song) {
+	public void add(Song song) {
 		playlist.add(song);
 	}
 	
@@ -24,8 +24,33 @@ public class Playlist {
 		}
 	}
 	
+	public boolean checkSongInPlaylist(String songName) {
+		for (Song s : playlist)
+			if(s.getTitle().equals(songName)) {
+				return true;
+			}
+		return false;
+	}
+	
 	public String getName() {
 		return name;
+	}
+	
+	public int getSize() {
+		return playlist.size();
+	}
+	
+	@Override
+	public String toString() {
+		String retval = "Playlist : " + this.name + "\n";
+		
+		for (Song s : playlist) {
+			retval = retval + s.getTitle() + ", " + s.getArtist() + "\n";
+		}
+		
+		retval = retval + "\n";
+		
+		return retval;
 	}
 	
 	
