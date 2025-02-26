@@ -1,9 +1,19 @@
 package model;
 
+/*
+ * File:	MusicStore.java
+ * Project: LA1-MusicLibrary
+ * Author:	Tristan Emma
+ * Edited:	Jacob Taylor
+ * Purpose:	Contains main store functionality, and houses the
+ * 			process for building out all the information
+ * 			stored in the store.
+ */
+
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class MusicStore {
@@ -148,7 +158,7 @@ public class MusicStore {
 					retval = retval + s.getTitle() + "\n";
 			}
 		}
-		return retval;
+		return retval + "\n";
 	}
 	
 	private String searchAlbumArtist(String val) {
@@ -161,12 +171,7 @@ public class MusicStore {
 					retval = retval + s.getTitle() + "\n";
 			}
 		}
-		return retval;
-	}
-	
-	// this might just be temporary, idk if theres a real need for this
-	ArrayList<Album> getAlbums(){		
-		return new ArrayList<Album>(albums);
+		return retval + "\n";
 	}
 	
 	public boolean checkSongInStore(String songName) {
@@ -184,7 +189,7 @@ public class MusicStore {
 		return false;
 	}
 	
-	ArrayList<Song> matchSongsInStore(String songName){
+	ArrayList<Song> getSongsFromStore(String songName){
 		ArrayList<Song> songs = new ArrayList<Song>();
 		
 		for (Album a : albums)
@@ -195,16 +200,16 @@ public class MusicStore {
 		return songs;
 	}
 	
-	ArrayList<Album> matchAlbumsInStore(String albumName){
-		ArrayList<Album> albumMatch = new ArrayList<Album>();
+	ArrayList<Album> getAlbumsFromStore(String albumName){
+		ArrayList<Album> getAlbums = new ArrayList<Album>();
 		
 		for (Album a : albums) {
 			System.out.println(a.getName());
 			if (a.getName().equals(albumName))
-				albumMatch.add(a);
+				getAlbums.add(a);
 		}
 
-		return albumMatch;
+		return getAlbums;
 	}
 
 }

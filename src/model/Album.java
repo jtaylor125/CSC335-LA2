@@ -1,5 +1,17 @@
 package model;
 
+/*
+ * File:	Album.java
+ * Project: LA1-MusicLibrary
+ * Author:	Tristan Emma
+ * Purpose:	Album object used in the program. Stores
+ * 			name, artist, genre and year of each album
+ * 			as well as its song list.
+ * 			Each Album is designed to be instantiated 
+ * 			only once (i.e. no copies).
+ */
+
+
 import java.util.ArrayList;
 
 public class Album {
