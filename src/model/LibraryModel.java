@@ -4,79 +4,100 @@ import java.util.ArrayList;
 
 public class LibraryModel {
 	private ArrayList<Song> library;
+	private ArrayList<Album> albums;
 	private ArrayList<Playlist> playlistList;
 	private MusicStore musicStore;
 	
 	public LibraryModel() {
 		this.library = new ArrayList<Song>();
+		this.albums = new ArrayList<Album>();
 		this.playlistList = new ArrayList<Playlist>();
 		this.musicStore = new MusicStore();
 	}
 	
-	// make sure to return copy/just info
-	// search music store for song by title
-	public ArrayList<Song> searchStoreSongTitle(String title) {
-		ArrayList<Album> albums = musicStore.getAlbums();
-		ArrayList<Song> searchSongs = new ArrayList<Song>();
+	/*
+	 * 		Search Methods
+	 */
+	public String search(String s, String songOrAlbum, String titleOrArtist) {
+		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Title"))
+			return searchSongTitle(s);
+		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Artist"))
+			return searchSongArtist(s);
+		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Title"))
+			return searchAlbumTitle(s);
+		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Artist"))
+			return searchAlbumArtist(s);
 		
-		for (int i=0;i<albums.size();i++) {
-			ArrayList<Song> songList = albums.get(i).getSongs();
-			for (Song song : songList) {
-				if (song.getTitle().equals(title)) {
-					searchSongs.add(song);
-				}
+		return "Incorrect parameters sent, check code\n";
+	}
+	
+	private String searchSongTitle(String val) {
+		String retval = "";
+		
+		for(Song s : this.library) 
+			if(val.equals(s.getTitle())) 
+				retval = retval + s.toString();
+
+		return retval;
+	}
+	
+	private String searchSongArtist(String val) {
+		String retval = "";
+		
+		for(Song s : this.library)
+			if(val.equals(s.getArtist()))
+				retval = retval + s.toString();		
+		return retval;
+	}
+	
+	private String searchAlbumTitle(String val) {
+		String retval = "";
+		
+		for(Album a : this.albums) {
+			if(val.equals(a.getName())) {
+				retval = retval + a.toString();
+				for(Song s: a.getSongs())
+					retval = retval + s.getTitle() + "\n";
 			}
 		}
-		
-		return searchSongs;
+		return retval;
 	}
 	
-	// make sure to return copy/just info
-	// search music store for song by artist
-	public ArrayList<Song> searchStoreSongArtist(String artist) {
-		ArrayList<Album> albums = musicStore.getAlbums();
-		ArrayList<Song> searchSongs = new ArrayList<Song>();
+	private String searchAlbumArtist(String val) {
+		String retval = "";
 		
-		for (int i=0;i<albums.size();i++) {
-			ArrayList<Song> songList = albums.get(i).getSongs();
-			for (Song song : songList) {
-				if (song.getArtist().equals(artist)) {
-					searchSongs.add(song);
-				}
+		for(Album a : this.albums) {
+			if(val.equals(a.getArtist())) {
+				retval = retval + a.toString();
+				for(Song s: a.getSongs())
+					retval = retval + s.getTitle() + "\n";
 			}
 		}
-		
-		return searchSongs;
-	}
-	
-	// make sure to return copy/just info
-	// search music store for album by title
-	public ArrayList<Album> searchStoreAlbumTitle(String title) {
-		ArrayList<Album> searchAlbums = new ArrayList<Album>();
-		return searchAlbums;
-	}
-	
-	// make sure to return copy/just info
-	// search music store for album by artist
-	public ArrayList<Album> searchStoreAlbumArtist(String artist) {
-		ArrayList<Album> searchAlbums = new ArrayList<Album>();
-		return searchAlbums;
+		return retval;
 	}
 	
 	// add a song from music store to library
 	public void addSong(String songName) {
-		//TO DO, search for song from MusicStore, add it to library
-		return;
+		ArrayList<Song> matchSongs = musicStore.matchSongsInStore(songName);
+		
+		for (Song s : matchSongs)
+			library.add(s);
 	}
 	
 	// add a whole album from music store to library
 	public void addAlbum(String albumName) {
-		//TO DO, search for album from MusicStore, add it to library
-		return;
+		ArrayList<Album> matchAlbums = musicStore.matchAlbumsInStore(albumName);
+		
+		for (Album a : matchAlbums) {
+			albums.add(a);
+			for (Song s : a.getSongs())
+				if (!library.contains(s))
+					library.add(s);
+		}
 	}
 	
 	// get list of song titles in whole library
-	public ArrayList<String> getSongTitles(){
+	public String getSongTitles(){
 		ArrayList<String> titles = new ArrayList<String>();
 		
 		// need to add getTitle to song
@@ -86,11 +107,15 @@ public class LibraryModel {
 			}
 		}
 		
-		return titles; // do we need an unmodifiable list here?
+		String retval = "";
+		for (String t : titles)
+			retval = retval + t + "\n";
+		
+		return retval;
 	}
 	
 	// get list of artists in whole library
-	public ArrayList<String> getArtists(){
+	public String getArtists(){
 		ArrayList<String> artists = new ArrayList<String>();
 		
 		// need to add getArtist to song
@@ -100,11 +125,15 @@ public class LibraryModel {
 			}
 		}
 		
-		return artists; // do we need an unmodifiable list here?
+		String retval = "";
+		for (String a : artists)
+			retval = retval + a + "\n";
+		
+		return retval;
 	}
 	
 	// get list of albums in whole library
-	public ArrayList<String> getAlbums(){
+	public String getAlbums(){
 		ArrayList<String> albums = new ArrayList<String>();
 		
 		// need to add getAlbum to song
@@ -114,11 +143,15 @@ public class LibraryModel {
 			}
 		}
 		
-		return albums; // do we need an unmodifiable list here?
+		String retval = "";
+		for (String a : albums)
+			retval = retval + a + "\n";
+		
+		return retval;
 	}
 	
 	// get list of playlists in whole library
-	public ArrayList<String> getPlaylists(){
+	public String getPlaylists(){
 		ArrayList<String> playlists = new ArrayList<String>();
 		
 		// need to add getAlbum to song
@@ -128,11 +161,15 @@ public class LibraryModel {
 			}
 		}
 		
-		return playlists; // do we need an unmodifiable list here?
+		String retval = "";
+		for (String p : playlists)
+			retval = retval + p + "\n";
+		
+		return retval;
 	}
 	
 	// get list of favorite songs in whole library
-	public ArrayList<String> getFavoriteSongs(){
+	public String getFavoriteSongs(){
 		ArrayList<String> favorites = new ArrayList<String>();
 		
 		// need to add getTitle and isFavorite to song
@@ -142,7 +179,11 @@ public class LibraryModel {
 			}
 		}
 		
-		return favorites; // do we need an unmodifiable list here?
+		String retval = "";
+		for (String f : favorites)
+			retval = retval + f + "\n";
+		
+		return retval;
 	}
 	
 	// create a playlist and add it to list of playlists
@@ -152,10 +193,13 @@ public class LibraryModel {
 	}
 	
 	// add a song to a playlist
-	public void addToPlaylist(Song song, String playlistName) {
+	public void addToPlaylist(String songName, String playlistName) {
 		for (int i=0; i < playlistList.size(); i++) {
 			if (playlistList.get(i).getName().equals(playlistName)) {
-				playlistList.get(i).addSong(song);
+				for (Song s : library)
+					if (s.getTitle().equals(songName)) {
+						playlistList.get(i).add(s);
+					}
 			}
 		}
 	}
@@ -167,6 +211,30 @@ public class LibraryModel {
 				playlistList.get(i).removeSong(songName);
 			}
 		}
+	}
+	
+	public boolean checkPlaylistExistence(String playlistName) {
+		for (Playlist p : playlistList)
+			if (p.getName().equals(playlistName)) {
+				return true;
+			}
+		return false;
+	}
+	
+	public boolean checkSongInPlaylist(String songName, String playlistName) {
+		for (Playlist p : playlistList)
+			if (p.getName().equals(playlistName)) {
+				return p.checkSongInPlaylist(songName);
+			}
+		return false;
+	}
+	
+	public boolean checkSongInLibrary(String songName) {
+		for (Song s : library)
+			if (s.getTitle().equals(songName)) {
+				return true;
+			}
+		return false;
 	}
 	
 	// mark a song as a favorite

@@ -163,9 +163,46 @@ public class MusicStore {
 		}
 		return retval;
 	}
+	
 	// this might just be temporary, idk if theres a real need for this
 	ArrayList<Album> getAlbums(){		
 		return new ArrayList<Album>(albums);
+	}
+	
+	public boolean checkSongInStore(String songName) {
+		for (Album a : albums)
+			for (Song s : a.getSongs())
+				if (s.getTitle().equals(songName))
+					return true;
+		return false;
+	}
+	
+	public boolean checkAlbumInStore(String albumName) {
+		for (Album a : albums)
+			if (a.getName().equals(albumName))
+				return true;
+		return false;
+	}
+	
+	ArrayList<Song> matchSongsInStore(String songName){
+		ArrayList<Song> songs = new ArrayList<Song>();
+		
+		for (Album a : albums)
+			for (Song s : a.getSongs())
+				if (s.getTitle().equals(songName))
+					songs.add(s);
+
+		return songs;
+	}
+	
+	ArrayList<Album> matchAlbumsInStore(String albumName){
+		ArrayList<Album> albums = new ArrayList<Album>();
+		
+		for (Album a : albums)
+			if (a.getName().equals(albumName))
+				albums.add(a);
+
+		return albums;
 	}
 
 }
