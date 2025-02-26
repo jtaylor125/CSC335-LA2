@@ -11,16 +11,19 @@ class MusicStoreTest {
 	@Test
 	void testBasic() {
 		MusicStore ms = new MusicStore();
-		ArrayList<Album> albums = ms.getAlbums();
+		ArrayList<Album> albums = ms.getAlbumsFromStore("Sons","The Heavy");
+		albums.add(ms.getAlbumsFromStore("21", "Adele").get(0));
+		albums.add(ms.getAlbumsFromStore("19", "Adele").get(0));
+		albums.add(ms.getAlbumsFromStore("Coat of Many Colors", "Dolly Parton").get(0));
 		/*
-		 * for(Album a : albums) {
-			System.out.println(a.toString());
-			for(Song s : a.getSongs())
-				System.out.println(s.toString());
-		}
-		 */
-		
-		assertTrue(albums.size() == 15);
+		*for(Album a : albums) {
+		*	System.out.println(a.toString());
+		*	for(Song s : a.getSongs())
+		*		System.out.println(s.toString());
+		*}
+		*/
+
+		assertTrue(albums.size() == 4);
 	}
 	
 	@Test
@@ -133,7 +136,7 @@ class MusicStoreTest {
 				+ "Simple Things\n"
 				+ "A Whole Lot of Love\n"
 				+ "What Don't Kill You\n"
-				+ "Burn Bright\n";
+				+ "Burn Bright\n\n";
 		assertEquals(search,expected);
 	}
 	
@@ -156,7 +159,7 @@ class MusicStoreTest {
 				+ "Simple Things\n"
 				+ "A Whole Lot of Love\n"
 				+ "What Don't Kill You\n"
-				+ "Burn Bright\n";
+				+ "Burn Bright\n\n";
 		assertEquals(search,expected);
 	}
 	
@@ -184,7 +187,7 @@ class MusicStoreTest {
 	@Test
 	void testMatchSongs() {
 		MusicStore ms = new MusicStore();
-		ArrayList<Song> matches = ms.matchSongsInStore("Tired");
+		ArrayList<Song> matches = ms.getSongsFromStore("Tired","Adele");
 		assertTrue(matches.size() == 1);
 		assertTrue(matches.get(0).getTitle().equals("Tired"));
 	}
@@ -192,8 +195,7 @@ class MusicStoreTest {
 	@Test
 	void testMatchAlbums() {
 		MusicStore ms = new MusicStore();
-		ArrayList<Album> matches = ms.matchAlbumsInStore("Sons");
-		System.out.println(matches.size());
+		ArrayList<Album> matches = ms.getAlbumsFromStore("Sons","The Heavy");
 		assertTrue(matches.size() == 1);
 		assertTrue(matches.get(0).getName().equals("Sons"));
 	

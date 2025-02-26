@@ -133,7 +133,9 @@ public class Main {
 				if (library.getSongTitles().contains(song)) {
 					System.out.println("Song already in library!");
 				} else {
-					library.addSong(song, ms);
+					System.out.println("Who is the artist?");
+					String artist = s.nextLine().strip();
+					library.addSong(song, artist,ms);
 					System.out.println("Successfully added");
 				}
 			} else {
@@ -148,7 +150,9 @@ public class Main {
 				if (library.getAlbums().contains(album)) {
 					System.out.println("Album already in library!");
 				} else {
-					library.addSong(album, ms);
+					System.out.println("Who is the artist?");
+					String artist = s.nextLine().strip();
+					library.addSong(album, artist,ms);
 					System.out.println("Successfully added");
 				}
 			} else {
