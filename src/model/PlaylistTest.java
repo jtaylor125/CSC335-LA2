@@ -51,14 +51,14 @@ class PlaylistTest {
 		
 		assertEquals(playlist.getSize(),5);
 		
-		playlist.removeSong(t2.getTitle());
+		playlist.removeSong(t2);
 		
 		assertEquals(playlist.getSize(),4);
 		
-		playlist.removeSong(t0.getTitle());
-		playlist.removeSong(t1.getTitle());
-		playlist.removeSong(t3.getTitle());
-		playlist.removeSong(t4.getTitle());
+		playlist.removeSong(t0);
+		playlist.removeSong(t1);
+		playlist.removeSong(t3);
+		playlist.removeSong(t4);
 		
 		assertEquals(playlist.getSize(),0);
 	}

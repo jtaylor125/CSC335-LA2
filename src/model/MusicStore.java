@@ -165,6 +165,7 @@ public class MusicStore {
 		String retval = "";
 		
 		for(Album a : this.albums) {
+			System.out.println(val.equals(a.getArtist()));
 			if(val.equals(a.getArtist())) {
 				retval = retval + a.toString();
 				for(Song s: a.getSongs())
@@ -189,23 +190,23 @@ public class MusicStore {
 		return false;
 	}
 	
-	ArrayList<Song> getSongsFromStore(String songName){
+	ArrayList<Song> getSongsFromStore(String songName, String artist){
 		ArrayList<Song> songs = new ArrayList<Song>();
 		
 		for (Album a : albums)
 			for (Song s : a.getSongs())
-				if (s.getTitle().equals(songName))
+				if (s.getTitle().equals(songName) && s.getArtist().equals(artist))
 					songs.add(s);
 
 		return songs;
 	}
 	
-	ArrayList<Album> getAlbumsFromStore(String albumName){
+	ArrayList<Album> getAlbumsFromStore(String albumName, String artist){
 		ArrayList<Album> getAlbums = new ArrayList<Album>();
 		
 		for (Album a : albums) {
 			System.out.println(a.getName());
-			if (a.getName().equals(albumName))
+			if (a.getName().equals(albumName) && a.getArtist().equals(artist))
 				getAlbums.add(a);
 		}
 

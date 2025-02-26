@@ -75,16 +75,16 @@ public class LibraryModel {
 	}
 	
 	// add a song from music store to library
-	public void addSong(String songName, MusicStore musicStore) {
-		ArrayList<Song> matchSongs = musicStore.getSongsFromStore(songName);
+	public void addSong(String songName, String artist, MusicStore musicStore) {
+		ArrayList<Song> matchSongs = musicStore.getSongsFromStore(songName,artist);
 		
 		for (Song s : matchSongs)
 			library.add(s);
 	}
 	
 	// add a whole album from music store to library
-	public void addAlbum(String albumName, MusicStore musicStore) {
-		ArrayList<Album> matchAlbums = musicStore.getAlbumsFromStore(albumName);
+	public void addAlbum(String albumName, String artist, MusicStore musicStore) {
+		ArrayList<Album> matchAlbums = musicStore.getAlbumsFromStore(albumName, artist);
 		
 		for (Album a : matchAlbums) {
 			albums.add(a);
@@ -191,22 +191,21 @@ public class LibraryModel {
 	}
 	
 	// add a song to a playlist
-	public void addToPlaylist(String songName, String playlistName) {
+	public void addToPlaylist(String songName, String artist, String playlistName) {
+		Song song = this.getSong(songName, artist);
 		for (int i=0; i < playlistList.size(); i++) {
 			if (playlistList.get(i).getName().equals(playlistName)) {
-				for (Song s : library)
-					if (s.getTitle().equals(songName)) {
-						playlistList.get(i).add(s);
-					}
+				playlistList.get(i).add(song);
 			}
 		}
 	}
 	
 	// remove a song from a playlist
-	public void removeFromPlaylist(String songName, String playlistName) {
+	public void removeFromPlaylist(String songName, String artist, String playlistName) {
+		Song song = this.getSong(songName, artist);
 		for (int i=0; i < playlistList.size(); i++) {
 			if (playlistList.get(i).getName().equals(playlistName)) {
-				playlistList.get(i).removeSong(songName);
+				playlistList.get(i).removeSong(song);
 			}
 		}
 	}
@@ -237,9 +236,10 @@ public class LibraryModel {
 	
 	// mark a song as a favorite
 	// need a markFavorite method in Song
-	public void markFavorite(String songName) {
+	public void markFavorite(String songName, String artist) {
+		Song song = this.getSong(songName, artist);
 		for (int i =0; i< library.size();i++) {
-			if (library.get(i).getTitle().equals(songName)) {
+			if (library.get(i).getTitle().equals(song.getTitle()) && library.get(i).getArtist().equals(song.getArtist())) {
 				library.get(i).setFavorite();
 			}
 		}
@@ -247,15 +247,22 @@ public class LibraryModel {
 	
 	// rate a song from 1 to 5
 	// need a rating method
-	public void rateSong(String songName, int rating) {
+	public void rateSong(String songName, String artist, int rating) {
+		Song song = this.getSong(songName, artist);
 		for (int i =0; i< library.size();i++) {
-			if (library.get(i).getTitle().equals(songName)) {
+			if (library.get(i).getTitle().equals(song.getTitle()) && library.get(i).getArtist().equals(song.getArtist())) {
 				library.get(i).rate(rating);
-				if (rating == 5) {
-					library.get(i).setFavorite();
-				}
 			}
 		}
+	}
+	
+	private Song getSong(String title, String artist) {
+		for (Song s:library) {
+			if (s.getTitle().equals(title) && s.getArtist().equals(artist)) {
+				return s;
+			}
+		}
+		return null;
 	}
 	
 }

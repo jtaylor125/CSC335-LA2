@@ -16,9 +16,9 @@ public class Playlist {
 		playlist.add(song);
 	}
 	
-	public void removeSong(String songName) {
+	public void removeSong(Song song) {
 		for (int i=0;i<playlist.size();i++) {
-			if (playlist.get(i).getTitle().equals(songName)) {
+			if (playlist.get(i).getTitle().equals(song.getTitle())) {
 				playlist.remove(i);
 			}
 		}
