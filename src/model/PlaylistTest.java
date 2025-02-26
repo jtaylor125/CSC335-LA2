@@ -64,6 +64,19 @@ class PlaylistTest {
 	}
 	
 	@Test
+	void testCheckSong() {
+		Playlist playlist = new Playlist("newPlaylist");
+		
+		Song t0 = new Song("I Saw Her Standing There", "The Beatles", "Please Please Me");
+		Song t1 = new Song("Misery", "The Beatles", "Please Please Me");
+		
+		playlist.add(t0);
+		
+		assertTrue(playlist.checkSongInPlaylist("I Saw Her Standing There"));
+		assertFalse(playlist.checkSongInPlaylist("Misery"));
+	}
+	
+	@Test
 	void testToString() {
 		Playlist playlist = new Playlist("newPlaylist");
 		

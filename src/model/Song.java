@@ -92,7 +92,7 @@ public class Song {
 	public String toString() {
 		String retval = this.title  + "\n"
 						+ "Artist: " + this.artist + "\n"
-						+ "Album: " + this.album  + "\n";
+						+ "Album:  " + this.album  + "\n";
 		
 		return retval;		
 	}

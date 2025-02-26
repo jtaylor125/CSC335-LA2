@@ -201,13 +201,15 @@ public class MusicStore {
 	}
 	
 	ArrayList<Album> getAlbumsFromStore(String albumName){
-		ArrayList<Album> albums = new ArrayList<Album>();
+		ArrayList<Album> getAlbums = new ArrayList<Album>();
 		
-		for (Album a : albums)
+		for (Album a : albums) {
+			System.out.println(a.getName());
 			if (a.getName().equals(albumName))
-				albums.add(a);
+				getAlbums.add(a);
+		}
 
-		return albums;
+		return getAlbums;
 	}
 
 }
