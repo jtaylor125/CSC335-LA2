@@ -1,5 +1,27 @@
 package view;
 
+/*
+ * File:	Main.java
+ * Project: LA1-MusicLibrary
+ * Authors:	Jacob Taylor and Tristan Emma
+ * Editors:	Tristan Emma and Jacob Taylor
+ * Purpose:	Contains view functionality for project
+ * 			The main method builds the MusicStore and
+ * 			creates the LibraryModel, then loops over
+ * 			user inputed commands until the Exit command
+ * 			is called.
+ * 
+ * Overview: Search Add LIst, Playlist functions, favorite/rate
+ * 			 The command interface accepts "Search" to search
+ * 			 either the library or the store for songs and albums
+ * 			 "Add" allows the use to add songs or albums to the 
+ * 			 library. Typing "List" lists the names of whatever
+ * 			 object is further specified. "Playlist" opens playlist
+ * 			 actions create, add song and remove song. Finally,
+ * 			 "Favorite" and "Rate" allow for their respective
+ * 			 actions towards songs.
+ */
+
 import java.util.Scanner;
 
 import model.LibraryModel;
@@ -64,7 +86,7 @@ public class Main {
 		System.out.println("Allows you to create a new playlist, or add and remove songs from a playlist");
 		
 		System.out.print("Favorite:    ");
-		System.out.println("Allows you to favorite a song from thee Library");
+		System.out.println("Allows you to favorite a song from the Library");
 		
 		System.out.print("Rate:        ");
 		System.out.println("Allows you to rate a song from the Library on a scale of 1-5");
@@ -208,8 +230,11 @@ public class Main {
 				System.out.println("Enter the song you want to add:");
 				String songName = s.nextLine().strip();
 				
-				if (library.checkSongInLibrary(songName)) {
-					library.addToPlaylist(songName, playlistName);
+				System.out.println("Enter the artist of the song:");
+				String artist = s.nextLine().strip();
+				
+				if (library.checkSongInLibrary(songName, artist)) {
+					library.addToPlaylist(songName, artist, playlistName);
 				} else {
 					System.out.println("Song not found");
 				}
@@ -224,9 +249,12 @@ public class Main {
 				System.out.println("Enter the song you want to remove:");
 				String songName = s.nextLine().strip();
 				
-				if (library.checkSongInLibrary(songName)) {
-					if (library.checkSongInPlaylist(songName, playlistName)) {
-						library.removeFromPlaylist(songName, playlistName);
+				System.out.println("Enter the artist of the song:");
+				String artist = s.nextLine().strip();
+				
+				if (library.checkSongInLibrary(songName, artist)) {
+					if (library.checkSongInPlaylist(songName, artist, playlistName)) {
+						library.removeFromPlaylist(songName, artist, playlistName);
 					} else {
 						System.out.println("Song not found in playlist");
 					}
@@ -242,13 +270,14 @@ public class Main {
 	}
 	
 	public static void favoriteCommand(Scanner s, LibraryModel library) {
-		System.out.println("What song would you like to favorite? (Example: \"Tired\")");
-		System.out.println("Enter anything else to go back");
+		System.out.println("What is the name of the song would you like to favorite? (Example: \"Tired\")");
+		String songName = s.nextLine().strip();
 		
-		String answer = s.nextLine().strip();
+		System.out.println("Enter the artist of the song:");
+		String artist = s.nextLine().strip();
 		
-		if (library.checkSongInLibrary(answer)) {
-			library.markFavorite(answer);
+		if (library.checkSongInLibrary(songName, artist)) {
+			library.markFavorite(songName, artist);
 			System.out.println("Favorites updated");
 		} else {
 			System.out.println("Song not found");
@@ -258,12 +287,13 @@ public class Main {
 	
 	public static void rateCommand(Scanner s, LibraryModel library) {
 		System.out.println("What song would you like to rate? (Example: \"Tired\")");
-		System.out.println("Enter anything else to go back");
+		String songName = s.nextLine().strip();
 		
-		String answer = s.nextLine().strip();
+		System.out.println("Enter the artist of the song:");
+		String artist = s.nextLine().strip();
 		
-		if (library.checkSongInLibrary(answer)) {
-			System.out.printf("What would you like to rate %s? Enter an integer from 1 to 5",answer);
+		if (library.checkSongInLibrary(songName, artist)) {
+			System.out.printf("What would you like to rate %s? Enter an integer from 1 to 5", songName);
 			System.out.println("");
 			
 			String rating = s.nextLine().strip();
@@ -272,7 +302,7 @@ public class Main {
 				if (ratingInt < 1 || ratingInt > 5) {
 					System.out.println("Input was not between 1 and 5");
 				} else {
-					library.rateSong(answer, ratingInt);
+					library.rateSong(songName, artist, ratingInt);
 					System.out.println("Rating updated");
 				}
 				

@@ -4,6 +4,7 @@ package model;
  * File:	Album.java
  * Project: LA1-MusicLibrary
  * Author:	Tristan Emma
+ * Editor:	Jacob Taylor
  * Purpose:	Album object used in the program. Stores
  * 			name, artist, genre and year of each album
  * 			as well as its song list.
