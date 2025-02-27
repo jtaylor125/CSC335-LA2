@@ -147,7 +147,7 @@ public class Main {
 		String answer = s.nextLine().strip();
 		
 		if (answer.equals("Song")) {
-			System.out.println("What song would you like to add? (Ex: \"Tired\"");
+			System.out.println("What song would you like to add? (Ex: \"Tired\")");
 			
 			String song = s.nextLine().strip();
 			
@@ -164,7 +164,7 @@ public class Main {
 				System.out.printf("%s not found in store\n", song);
 			}
 		} else if (answer.equals("Album")) {
-			System.out.println("What album would you like to add? (Ex: \"Begin Again\"");
+			System.out.println("What album would you like to add? (Ex: \"Begin Again\")");
 			
 			String album = s.nextLine().strip();
 			
@@ -174,7 +174,7 @@ public class Main {
 				} else {
 					System.out.println("Who is the artist?");
 					String artist = s.nextLine().strip();
-					library.addSong(album, artist,ms);
+					library.addAlbum(album, artist,ms);
 					System.out.println("Successfully added");
 				}
 			} else {
