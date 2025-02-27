@@ -60,9 +60,12 @@ public class Album {
 	}	
 
 	public ArrayList<Song> getSongs(){
-		return songList;
+		return new ArrayList<Song>(songList);
 	}
 	
+	/*
+	 * 		Overridden toString(name, artist, genre, year)
+	 */
 
 	@Override
 	public String toString() {

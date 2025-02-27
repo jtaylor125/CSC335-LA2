@@ -86,6 +86,9 @@ public class Song {
 	}
 	
 	
+	/*
+	 * 		Overridden toString method (title, artist, and album)
+	 */
 	
 	@Override
 	public String toString() {

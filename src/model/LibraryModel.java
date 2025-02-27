@@ -15,9 +15,18 @@ package model;
 import java.util.ArrayList;
 
 public class LibraryModel {
+	
+	/*
+	 * 		Instance Variables
+	 */
+	
 	private ArrayList<Song> library;
 	private ArrayList<Album> albums;
 	private ArrayList<Playlist> playlistList;
+	
+	/*
+	 * 		Constructor
+	 */
 	
 	public LibraryModel() {
 		this.library = new ArrayList<Song>();
@@ -41,6 +50,7 @@ public class LibraryModel {
 		return "Incorrect parameters sent, check code\n";
 	}
 	
+	// private search helper to return a String that lists all songs of a Title in the library
 	private String searchSongTitle(String val) {
 		String retval = "";
 		
@@ -51,6 +61,7 @@ public class LibraryModel {
 		return retval;
 	}
 	
+	// private search helper to return a String that lists all songs by an Artist in the library
 	private String searchSongArtist(String val) {
 		String retval = "";
 		
@@ -60,6 +71,7 @@ public class LibraryModel {
 		return retval;
 	}
 	
+	// private search helper to return a String that lists all albums of a Title in the library
 	private String searchAlbumTitle(String val) {
 		String retval = "";
 		
@@ -73,6 +85,7 @@ public class LibraryModel {
 		return retval;
 	}
 	
+	// private search helper to return a String that lists all albums by an Artist in the library
 	private String searchAlbumArtist(String val) {
 		String retval = "";
 		
@@ -86,7 +99,8 @@ public class LibraryModel {
 		return retval;
 	}
 	
-	// add a song from music store to library
+	// boolean addSong - adds a song matching the name and artist from the music store to
+	// the library. Returns true if the addition was successful, false otherwise.
 	public boolean addSong(String songName, String artist, MusicStore musicStore) {
 		Song song = musicStore.getSong(songName,artist);
 		
@@ -98,7 +112,9 @@ public class LibraryModel {
 		}
 	}
 	
-	// add a whole album from music store to library
+	// boolean addAlbum - adds an album matching the name and artist from the music store to
+	// the library. Returns true if the addition was successful, false otherwise. Also adds
+	// all of the songs in the album to the library's library list.
 	public boolean addAlbum(String albumName, String artist, MusicStore musicStore) {
 		Album album = musicStore.getAlbum(albumName, artist);
 	
@@ -115,7 +131,8 @@ public class LibraryModel {
 		return true;
 	}
 	
-	// get list of song titles in whole library
+	// String getSongTitles - returns one String with all of the song titles in the library on
+	// different lines in the order they were added.
 	public String getSongTitles(){
 		ArrayList<String> titles = new ArrayList<String>();
 		
@@ -131,7 +148,8 @@ public class LibraryModel {
 		return retval;
 	}
 	
-	// get list of artists in whole library
+	// String getArtists - returns one String with all of the artists in the library on
+	// different lines in the order they were added.
 	public String getArtists(){
 		ArrayList<String> artists = new ArrayList<String>();
 		
@@ -149,7 +167,8 @@ public class LibraryModel {
 		return retval;
 	}
 	
-	// get list of albums in whole library
+	// String getAlbums - returns one String with all of the albums in the library on
+	// different lines in the order they were added.
 	public String getAlbums(){
 		ArrayList<String> albumsReturn = new ArrayList<String>();
 		
@@ -165,7 +184,8 @@ public class LibraryModel {
 		return retval;
 	}
 	
-	// get list of playlists in whole library
+	// String getPlaylists - returns one String with all of the playlists in the library on
+	// different lines in the order they were added.
 	public String getPlaylists(){
 		ArrayList<String> playlists = new ArrayList<String>();
 		
@@ -183,7 +203,8 @@ public class LibraryModel {
 		return retval;
 	}
 	
-	// get list of favorite songs in whole library
+	// String getFavoriteSongs - returns one String with all of the favorite song titles in 
+	// the library on different lines in the order they were favorited.
 	public String getFavoriteSongs(){
 		ArrayList<String> favorites = new ArrayList<String>();
 		
@@ -201,7 +222,9 @@ public class LibraryModel {
 		return retval;
 	}
 	
-	// create a playlist and add it to list of playlists
+	// boolean createPlaylist - creates a playlist named by the parameter. If a playlist already
+	// exists with that name, does not create a new one and returns false. Otherwise, creates
+	// a new playlist and returns true.
 	public boolean createPlaylist(String playlistName) {
 		Playlist checkExists = this.getPlaylist(playlistName);
 		if(checkExists != null) {
@@ -212,7 +235,9 @@ public class LibraryModel {
 		return true;
 	}
 	
-	// add a song to a playlist
+	// boolean addToPlaylist - adds a song found by the song name and artist to the playlist
+	// with playlist name. Assumes the song exists, returns false if the playlist does not exist.
+	// If the playlist and song both exist, add the song and return true.
 	public boolean addToPlaylist(String songName, String artist, String playlistName) {
 		Song song = this.getSong(songName, artist);
 
@@ -226,7 +251,9 @@ public class LibraryModel {
 		return true;
 	}
 	
-	// remove a song from a playlist
+	// boolean removeFromPlaylist - removes a song found by the song name and artist from the 
+	// playlist with playlist name. Assumes the song exists, returns false if the playlist does 
+	// not exist. If the playlist and song both exist, remove the song and return true.
 	public boolean removeFromPlaylist(String songName, String artist, String playlistName) {
 		Song song = this.getSong(songName, artist);
 
@@ -240,6 +267,9 @@ public class LibraryModel {
 		return true;
 	}
 	
+	// int playlistLength - package-only helper method for testing the class. Returns the
+	// number of songs in the playlist that matches playlistName, returns -1 if that
+	// playlist isn't found
 	int playlistLength(String playlistName) {
 		int playlistLength = -1;
 		for (int i=0; i < playlistList.size(); i++) {
@@ -250,6 +280,8 @@ public class LibraryModel {
 		return playlistLength;
 	}
 	
+	// boolean checkPlaylistExistence - checks if a playlist of playlistName exists, returning true
+	// if it does and false if it does not.
 	public boolean checkPlaylistExistence(String playlistName) {
 		for (Playlist p : playlistList)
 			if (p.getName().equals(playlistName)) {
@@ -258,6 +290,9 @@ public class LibraryModel {
 		return false;
 	}
 	
+	// boolean checkSongInPlaylist - checks if a song identified by its name and artist is in the 
+	// playlist identified by playlistName. If either object can't be found, returns false. If
+	// they exist, returns true if the song is in the playlist, false otherwise.
 	public boolean checkSongInPlaylist(String songName, String artist, String playlistName) {
 		Song song = this.getSong(songName, artist);
 		if (song == null) {
@@ -271,13 +306,25 @@ public class LibraryModel {
 		return p.hasSong(song);
 	}
 	
+	// private getter to get a playlist by its name. Returns null if no playlist is found.
+	private Playlist getPlaylist(String name) {
+		for(Playlist p : playlistList) 
+			if(p.getName().equals(name))
+				return p;
+		
+		return null;
+	}
+	
+	// boolean checkSongInLibrary - checks if a song identified by its name and artist is in the 
+	// library. Returns true if the song is in the library, false otherwise. 
 	public boolean checkSongInLibrary(String songName, String artist) {
 		Song song = this.getSong(songName, artist);
 		
 		return song != null;
 	}
 	
-	// mark a song as a favorite
+	// void markFavorite - marks a song identified by its name and artist as a favorite. Assumes
+	// that song exists.
 	public void markFavorite(String songName, String artist) {
 		Song song = this.getSong(songName, artist);
 		
@@ -285,32 +332,29 @@ public class LibraryModel {
 
 	}
 	
-	// rate a song from 1 to 5
+	// void rateSong - rates a song identified by its name and artist an integer rating. Assumes
+	// that song exists, and rating is between 1 and 5.
 	public void rateSong(String songName, String artist, int rating) {
 		Song song = this.getSong(songName, artist);
 		
 		song.rate(rating);
 	}
 	
+	// int getSongRating - package-only helper method for testing the class. Returns the
+	// rating of a song identified by its name and artist. Assumes that song exists.
 	int getSongRating(String songName, String artist) {
 		Song song = this.getSong(songName, artist);
 		return song.getRating();
 	}
 	
+	// Song getSong - private helper method to get a song object from the library. Returns null
+	// if the song is not found.
 	private Song getSong(String title, String artist) {
 		for (Song s:library) {
 			if (s.getTitle().equals(title) && s.getArtist().equals(artist)) {
 				return s;
 			}
 		}
-		return null;
-	}
-	
-	private Playlist getPlaylist(String name) {
-		for(Playlist p : playlistList) 
-			if(p.getName().equals(name))
-				return p;
-		
 		return null;
 	}
 	
