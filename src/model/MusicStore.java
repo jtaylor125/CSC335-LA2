@@ -139,7 +139,7 @@ public class MusicStore {
 		for(Album a : this.albums) 
 			for(Song s : a.getSongs()) 
 				if(val.equals(s.getTitle())) 
-					retval = retval + s.toString();
+					retval = retval + s.toString() + "\n";
 
 		return retval;
 	}
@@ -147,10 +147,11 @@ public class MusicStore {
 	private String searchSongArtist(String val) {
 		String retval = "";
 		
-		for(Album a : this.albums)
-			if(val.equals(a.getArtist()))
-				for(Song s : a.getSongs())
-					retval = retval + s.toString();
+		for(Album a : this.albums) 
+			if(val.equals(a.getArtist())) 
+				for(Song s : a.getSongs()) 
+					retval = retval + s.toString() + "\n";
+					
 		
 		return retval;
 	}
@@ -163,23 +164,24 @@ public class MusicStore {
 				retval = retval + a.toString();
 				for(Song s: a.getSongs())
 					retval = retval + s.getTitle() + "\n";
+				retval = retval + "\n";
 			}
 		}
-		return retval + "\n";
+		return retval;
 	}
 	
 	private String searchAlbumArtist(String val) {
 		String retval = "";
 		
 		for(Album a : this.albums) {
-			System.out.println(val.equals(a.getArtist()));
 			if(val.equals(a.getArtist())) {
 				retval = retval + a.toString();
 				for(Song s: a.getSongs())
 					retval = retval + s.getTitle() + "\n";
+				retval = retval + "\n";
 			}
 		}
-		return retval + "\n";
+		return retval;
 	}
 	
 	public boolean checkSongInStore(String songName) {
