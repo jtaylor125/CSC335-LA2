@@ -13,27 +13,41 @@ package model;
 import java.util.ArrayList;
 
 public class Playlist {
+	
+	/*
+	 * 		Instance Variables
+	 */
+	
 	private ArrayList<Song> playlist;
 	private final String name;
+	
+	/*
+	 * 		Constructor
+	 */
 	
 	public Playlist(String name) {
 		this.name = name;
 		this.playlist = new ArrayList<Song>();
 	}
 	
-	// assumes songs are immutable (check this)
+	// void add(Song song) - add a song to the playlist. Assumes song is not already in the
+	// playlist to avoid duplicates
 	public void add(Song song) {
 		playlist.add(song);
 	}
 	
+	// void removeSong(Song song) - remove a song from the playlist. Assumes song is in the
+	// playlist, makes no removal otherwise.
 	public void removeSong(Song song) {
 		for (int i=0;i<playlist.size();i++) {
-			if (playlist.get(i).getTitle().equals(song.getTitle())) {
+			if (playlist.get(i).getTitle().equals(song.getTitle()) 
+					&& playlist.get(i).getArtist().equals(song.getArtist())) {
 				playlist.remove(i);
 			}
 		}
 	}
 	
+	// boolean hasSong(Song song) - returns true if the song is in the playlist, false otherwise.
 	public boolean hasSong(Song song) {
 		for (Song s : playlist)
 			if(s.equals(song)) {
@@ -42,6 +56,10 @@ public class Playlist {
 		return false;
 	}
 	
+	/*
+	 * 		Getters
+	 */
+	
 	public String getName() {
 		return name;
 	}
@@ -49,6 +67,10 @@ public class Playlist {
 	public int getSize() {
 		return playlist.size();
 	}
+	
+	/*
+	 * 		Overridden toString method (playlist name and songs)
+	 */
 	
 	@Override
 	public String toString() {

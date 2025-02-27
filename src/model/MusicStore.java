@@ -133,6 +133,8 @@ public class MusicStore {
 		return "Incorrect parameters sent, check code\n";
 	}
 	
+	
+	// private search helper to return a String that lists all songs of a Title in the store
 	private String searchSongTitle(String val) {
 		String retval = "";
 		
@@ -144,6 +146,7 @@ public class MusicStore {
 		return retval;
 	}
 	
+	// private search helper to return a String that lists all songs by an Artist in the store
 	private String searchSongArtist(String val) {
 		String retval = "";
 		
@@ -156,6 +159,7 @@ public class MusicStore {
 		return retval;
 	}
 	
+	// private search helper to return a String that lists all albums of a Title in the store
 	private String searchAlbumTitle(String val) {
 		String retval = "";
 		
@@ -170,6 +174,7 @@ public class MusicStore {
 		return retval;
 	}
 	
+	// private search helper to return a String that lists all albums by an Artist in the store
 	private String searchAlbumArtist(String val) {
 		String retval = "";
 		
@@ -184,6 +189,7 @@ public class MusicStore {
 		return retval;
 	}
 	
+	// boolean checkSongInStore - check if input string song name is a song in the store.
 	public boolean checkSongInStore(String songName) {
 		for (Album a : albums)
 			for (Song s : a.getSongs())
@@ -192,6 +198,7 @@ public class MusicStore {
 		return false;
 	}
 	
+	// boolean checkAlbumInStore - check if input string album name is an album in the store
 	public boolean checkAlbumInStore(String albumName) {
 		for (Album a : albums)
 			if (a.getName().equals(albumName))
@@ -199,7 +206,11 @@ public class MusicStore {
 		return false;
 	}
 	
-	public Song getSong(String songName, String artist){
+	/*
+	 * 		Package-Only Getters (So library can retrieve Songs and Albums to add)
+	 */
+	
+	Song getSong(String songName, String artist){
 		
 		
 		for (Album a : albums)
@@ -210,7 +221,7 @@ public class MusicStore {
 		return null;
 	}
 	
-	public Album getAlbum(String albumName, String artist){
+	Album getAlbum(String albumName, String artist){
 		
 		for (Album a : albums) {
 			if (a.getName().equals(albumName) && a.getArtist().equals(artist))
