@@ -152,13 +152,17 @@ public class Main {
 			String song = s.nextLine().strip();
 			
 			if (ms.checkSongInStore(song)) {
-				if (library.getSongTitles().contains(song)) {
+				System.out.println("Who is the artist?");
+				String artist = s.nextLine().strip();
+				
+				if (library.checkSongInLibrary(song,artist)) {
 					System.out.println("Song already in library!");
 				} else {
-					System.out.println("Who is the artist?");
-					String artist = s.nextLine().strip();
-					library.addSong(song, artist,ms);
-					System.out.println("Successfully added");
+					if (library.addSong(song, artist,ms)) {
+						System.out.println("Successfully added");
+					} else {
+						System.out.println("Song not found.");
+					}
 				}
 			} else {
 				System.out.printf("%s not found in store\n", song);
@@ -174,8 +178,11 @@ public class Main {
 				} else {
 					System.out.println("Who is the artist?");
 					String artist = s.nextLine().strip();
-					library.addAlbum(album, artist,ms);
-					System.out.println("Successfully added");
+					if (library.addAlbum(album, artist,ms)) {
+						System.out.println("Successfully added");
+					} else {
+						System.out.println("Album not found.");
+					}
 				}
 			} else {
 				System.out.printf("%s not found in store\n", album);
@@ -217,8 +224,11 @@ public class Main {
 			String name = s.nextLine().strip();
 			
 			if (name.length() != 0) {
-				library.createPlaylist(name);
-				System.out.println("Playlist created");
+				if (library.createPlaylist(name)) {
+					System.out.println("Playlist created");
+				} else {
+					System.out.println("Playlist already exists, choose a different name");
+				}
 			} else {
 				System.out.println("No name entered");
 			}
@@ -234,7 +244,11 @@ public class Main {
 				String artist = s.nextLine().strip();
 				
 				if (library.checkSongInLibrary(songName, artist)) {
-					library.addToPlaylist(songName, artist, playlistName);
+					if (library.addToPlaylist(songName, artist, playlistName)) {
+						System.out.println("Successfully added");
+					} else {
+						System.out.println("Playlist not found, check spelling");
+					}
 				} else {
 					System.out.println("Song not found");
 				}
@@ -254,7 +268,11 @@ public class Main {
 				
 				if (library.checkSongInLibrary(songName, artist)) {
 					if (library.checkSongInPlaylist(songName, artist, playlistName)) {
-						library.removeFromPlaylist(songName, artist, playlistName);
+						if (library.removeFromPlaylist(songName, artist, playlistName)) {
+							System.out.println("Successfully removed");
+						} else {
+							System.out.println("Playlist not found, check spelling");
+						}
 					} else {
 						System.out.println("Song not found in playlist");
 					}

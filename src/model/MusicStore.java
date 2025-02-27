@@ -213,7 +213,6 @@ public class MusicStore {
 	public Album getAlbum(String albumName, String artist){
 		
 		for (Album a : albums) {
-			System.out.println(a.getName());
 			if (a.getName().equals(albumName) && a.getArtist().equals(artist))
 				return a;
 		}
