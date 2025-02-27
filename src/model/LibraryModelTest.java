@@ -199,7 +199,15 @@ class LibraryModelTest {
 		assertEquals(1, library.playlistLength("Other"));
 		
 		String playlists = library.getPlaylists();
-		String expected = "Mana\nOther\n";
+		String expected = "Playlist : Mana\n"
+				+ "Selva Negra, Mana\n"
+				+ "Ana, Mana\n"
+				+ "\n"
+				+ "\n"
+				+ "Playlist : Other\n"
+				+ "Uh Oh, Norah Jones\n"
+				+ "\n"
+				+ "\n";
 		assertEquals(playlists,expected);
 	}
 	
