@@ -20,7 +20,7 @@ public class MusicStore {
 	/*
 	 * 		Instance Variables
 	 */
-	ArrayList<Album> albums;
+	private ArrayList<Album> albums;
 	
 	
 	/*

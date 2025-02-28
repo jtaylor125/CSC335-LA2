@@ -156,4 +156,21 @@ class MusicStoreTest {
 	
 	}
 	
+	@Test
+	void testgetSongAlbum() {
+		MusicStore ms = new MusicStore();
+		Song song = ms.getSong("Tired", "Adele");
+		Album alb = ms.getAlbum("19", "Adele");
+		
+		Song wSong = ms.getSong("Tired", "Adel");
+		Album wAlb = ms.getAlbum("19", "Adel");
+		
+		assertTrue(song.getAlbum().equals("19"));
+		assertEquals(alb.getArtist(), "Adele");
+		
+		assertEquals(wSong, null);
+		assertEquals(wAlb, null);
+		
+	}
+	
 }
