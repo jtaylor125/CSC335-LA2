@@ -108,6 +108,38 @@ public class User {
 		return this.library.getFavoriteSongs();
 	}
 	
+	public boolean createPlaylist(String playlistName) {
+		return this.library.createPlaylist(playlistName);
+	}
+	
+	public boolean addToPlaylist(String songName, String artist, String playlistName) {
+		return this.library.addToPlaylist(songName, artist, playlistName);
+	}
+	
+	public boolean removeFromPlaylist(String songName, String artist, String playlistName) {
+		return this.library.removeFromPlaylist(songName, artist, playlistName);
+	}
+	
+	public boolean checkPlaylistExistence(String playlistName) {
+		return this.library.checkPlaylistExistence(playlistName);
+	}
+	
+	public boolean checkSongInPlaylist(String songName, String artist, String playlistName) {
+		return this.library.checkSongInPlaylist(songName, artist, playlistName);
+	}
+	
+	public boolean checkSongInLibrary(String songName, String artist) {
+		return this.library.checkSongInLibrary(songName, artist);
+	}
+	
+	public void markFavorite(String songName, String artist) {
+		this.library.markFavorite(songName, artist);
+	}
+	
+	public void rateSong(String songName, String artist, int rating) {
+		this.library.rateSong(songName, artist, rating);
+	}
+	
 	public boolean isLoggedIn() {
 		if (this.loggedIn) {
 			return true;
