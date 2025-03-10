@@ -20,18 +20,33 @@ public class LibraryModel {
 	 * 		Instance Variables
 	 */
 	
-	private ArrayList<Song> library;
-	private ArrayList<Album> albums;
+	private ArrayList<UserSong> library;
+	private ArrayList<UserAlbum> albums;
 	private ArrayList<Playlist> playlistList;
+	
+	private Playlist recents;
+	private Playlist favorites;
+	private Playlist frequents;
+	private Playlist topRated;
+	
+	private ArrayList<Playlist> genres;
 	
 	/*
 	 * 		Constructor
 	 */
 	
 	public LibraryModel() {
-		this.library = new ArrayList<Song>();
-		this.albums = new ArrayList<Album>();
+		this.library = new ArrayList<UserSong>();
+		this.albums = new ArrayList<UserAlbum>();
+		
 		this.playlistList = new ArrayList<Playlist>();
+		
+		this.recents   = new Playlist("Recents");
+		this.favorites = new Playlist("Favorites");
+		this.frequents = new Playlist("Frequents");
+		this.topRated  = new Playlist("Top Rated");
+		
+		this.genres = new ArrayList<Playlist>();
 	}
 	
 	/*
@@ -104,12 +119,24 @@ public class LibraryModel {
 	public boolean addSong(String songName, String artist, MusicStore musicStore) {
 		Song song = musicStore.getSong(songName,artist);
 		
-		if (song != null) {
-			library.add(song);
-			return true;
-		} else {
+		if (song == null) 
 			return false;
-		}
+		
+		// if the song is already added, return true
+		if(this.checkSongInLibrary(songName, artist))
+			return true;
+		
+		// if the album does not exist in the library yet, add it
+		if(!this.checkAlbumInLibrary(song.getAlbum(), artist))
+			this.albums.add(new UserAlbum(musicStore.getAlbum(song.getAlbum(), artist)));
+		
+		// create a single song object, then add that to the album
+		// and the library
+		UserSong newSong = new UserSong(song);
+		library.add(newSong);
+		this.getAlbum(song.getAlbum(), artist).addSong(newSong);
+		
+		return true;
 	}
 	
 	// boolean addAlbum - adds an album matching the name and artist from the music store to
@@ -118,17 +145,64 @@ public class LibraryModel {
 	public boolean addAlbum(String albumName, String artist, MusicStore musicStore) {
 		Album album = musicStore.getAlbum(albumName, artist);
 	
-		if(album == null) {
+		if(album == null) 
 			return false;
-		}
+		
+		if(!this.checkAlbumInLibrary(albumName, artist))
+				albums.add(new UserAlbum(album));
+		
+		UserAlbum ua = this.getAlbum(albumName, artist);
+		
+		for (Song s : album.getSongs()) {
+			UserSong tempSong = new UserSong(s);
+			if (!this.checkSongInLibrary(s.getTitle(), artist))
+				library.add(tempSong);
 			
-		albums.add(album);
-		
-		for (Song s : album.getSongs())
-			if (!library.contains(s))
-				library.add(s);
-		
+			ua.addSong(tempSong);
+		}
 		return true;
+	}
+	
+	//TODO// NEEDS COMMENT
+	public void removeSong(String title, String artist) {
+		UserSong song = this.getSong(title, artist);
+		
+		if(this.getAlbum(song.getAlbum(), artist).getUserSongs().size() == 1)
+			this.albums.remove(this.getAlbum(song.getAlbum(), artist));
+		else
+			this.getAlbum(song.getAlbum(), artist).removeSong(song);
+		
+		
+		this.library.remove(song);
+		
+		for(Playlist p : this.playlistList)
+			if(p.hasSong(song))
+				p.removeSong(song);
+		this.updateFavorites();
+		this.updateFrequents();
+		this.updateGenres();
+		this.removeFromRecents(song);
+		this.updateTopRated();
+	}
+	
+	
+	//TODO// NEEDS COMMENT
+	public void removeAlbum(String name, String artist) {
+		UserAlbum album = this.getAlbum(name, artist);
+		ArrayList<UserSong> songs = album.getUserSongs();
+		
+		for(UserSong s : songs) {
+			this.library.remove(s);
+			this.removeFromRecents(s);
+			for(Playlist p : this.playlistList)
+				if(p.hasSong(s))
+					p.removeSong(s);
+		}
+		
+		this.updateFavorites();
+		this.updateFrequents();
+		this.updateGenres();
+		this.updateTopRated();
 	}
 	
 	// String getSongTitles - returns one String with all of the song titles in the library on
@@ -239,7 +313,7 @@ public class LibraryModel {
 	// with playlist name. Assumes the song exists, returns false if the playlist does not exist.
 	// If the playlist and song both exist, add the song and return true.
 	public boolean addToPlaylist(String songName, String artist, String playlistName) {
-		Song song = this.getSong(songName, artist);
+		UserSong song = this.getSong(songName, artist);
 
 		Playlist p = this.getPlaylist(playlistName);
 		if (p == null) {
@@ -255,7 +329,7 @@ public class LibraryModel {
 	// playlist with playlist name. Assumes the song exists, returns false if the playlist does 
 	// not exist. If the playlist and song both exist, remove the song and return true.
 	public boolean removeFromPlaylist(String songName, String artist, String playlistName) {
-		Song song = this.getSong(songName, artist);
+		UserSong song = this.getSong(songName, artist);
 
 		Playlist p = this.getPlaylist(playlistName);
 		if (p == null) {
@@ -294,7 +368,7 @@ public class LibraryModel {
 	// playlist identified by playlistName. If either object can't be found, returns false. If
 	// they exist, returns true if the song is in the playlist, false otherwise.
 	public boolean checkSongInPlaylist(String songName, String artist, String playlistName) {
-		Song song = this.getSong(songName, artist);
+		UserSong song = this.getSong(songName, artist);
 		if (song == null) {
 			return false;
 		}
@@ -315,18 +389,57 @@ public class LibraryModel {
 		return null;
 	}
 	
+	private void updateFavorites() {
+		for(UserSong us : this.library) 
+			if(us.isFavorite() && !this.favorites.hasSong(us))
+				this.favorites.add(us);
+	}
+	
+	private void updateTopRated() {
+		for(UserSong us : this.library)
+			if(((us.getRating() == 4) || (us.getRating() == 5)) && !this.topRated.hasSong(us))
+				this.topRated.add(us);
+	}
+	
+	private void updateFrequents() {
+		//TODO
+	}
+	
+	private void updateGenres() {
+		//TODO
+	}
+	
+	private void updateRecents(UserSong mostRecent) {
+		//TODO
+	}
+	
+	void setMostRecent(String title, String artist) {
+		//TODO
+	}
+	
+	private void removeFromRecents(UserSong toRemove) {
+		//TODO
+	}
+	
+	
 	// boolean checkSongInLibrary - checks if a song identified by its name and artist is in the 
 	// library. Returns true if the song is in the library, false otherwise. 
 	public boolean checkSongInLibrary(String songName, String artist) {
-		Song song = this.getSong(songName, artist);
+		UserSong song = this.getSong(songName, artist);
 		
 		return song != null;
+	}
+	
+	public boolean checkAlbumInLibrary(String name, String artist) {
+		UserAlbum album = this.getAlbum(name, artist);
+		
+		return album != null;
 	}
 	
 	// void markFavorite - marks a song identified by its name and artist as a favorite. Assumes
 	// that song exists.
 	public void markFavorite(String songName, String artist) {
-		Song song = this.getSong(songName, artist);
+		UserSong song = this.getSong(songName, artist);
 		
 		song.setFavorite();
 
@@ -335,7 +448,7 @@ public class LibraryModel {
 	// void rateSong - rates a song identified by its name and artist an integer rating. Assumes
 	// that song exists, and rating is between 1 and 5.
 	public void rateSong(String songName, String artist, int rating) {
-		Song song = this.getSong(songName, artist);
+		UserSong song = this.getSong(songName, artist);
 		
 		song.rate(rating);
 	}
@@ -343,18 +456,33 @@ public class LibraryModel {
 	// int getSongRating - package-only helper method for testing the class. Returns the
 	// rating of a song identified by its name and artist. Assumes that song exists.
 	int getSongRating(String songName, String artist) {
-		Song song = this.getSong(songName, artist);
+		UserSong song = this.getSong(songName, artist);
 		return song.getRating();
+	}
+	
+	// NEEDS COMMENT
+	public void playSong(String title, String artist) {
+		UserSong song = this.getSong(title, artist);
+		
+		song.playSong();
 	}
 	
 	// Song getSong - private helper method to get a song object from the library. Returns null
 	// if the song is not found.
-	private Song getSong(String title, String artist) {
-		for (Song s:library) {
+	private UserSong getSong(String title, String artist) {
+		for (UserSong s:library) {
 			if (s.getTitle().equals(title) && s.getArtist().equals(artist)) {
 				return s;
 			}
 		}
+		return null;
+	}
+	
+	private UserAlbum getAlbum(String name, String artist) {
+		for(UserAlbum ua : this.albums)
+			if(name.equals(ua.getName()) && artist.equals(ua.getArtist()))
+				return ua;
+		
 		return null;
 	}
 	

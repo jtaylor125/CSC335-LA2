@@ -1,0 +1,44 @@
+package model;
+
+import java.util.ArrayList;
+
+public class UserAlbum extends Album {
+	private ArrayList<UserSong> addedSongs;
+	
+	public UserAlbum(Album a) {
+		super(a.getName(), a.getArtist(), a.getGenre(), a.getYear(), a.getSongs());
+	
+		int numSongs = this.getSongs().size();
+		addedSongs = new ArrayList<UserSong>();
+		
+		for(int i = 0; i < numSongs; i++) 
+			addedSongs.set(i, null);
+	}
+	
+	public void addSong(UserSong song) {
+		ArrayList<Song> albumSongs = this.getSongs();
+		
+		int index = -1;
+		String songTitle = song.getTitle();
+		
+		for(int i = 0; i < albumSongs.size(); i++)
+			if(songTitle.equals(albumSongs.get(i).getTitle()))
+				index = i;
+		
+		if(addedSongs.get(index) == null)
+			addedSongs.set(index, song);
+	}
+	
+	public void removeSong(UserSong song) {
+		for(int i = 0; i < addedSongs.size(); i++) 
+			if(addedSongs.get(i) != null)
+				if(song.getTitle().equals(addedSongs.get(i).getTitle()))
+					addedSongs.set(i, null);
+	}
+	
+	public ArrayList<UserSong> getUserSongs(){
+		return new ArrayList<UserSong>(addedSongs);
+	}
+	
+	
+}

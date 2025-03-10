@@ -1,15 +1,22 @@
 package model;
 
-public class SongWrapper {
-	private Song song;
-	
+public class UserSong extends Song{
 	private int rating;
 	private boolean isFavorite;
 	
 	private int plays;
 	
-	public SongWrapper(Song song) {
-		this.song = song;
+	public UserSong(String title, String artist, String album) {
+		super(title, artist, album);
+		
+		this.rating = 0;
+		this.isFavorite = false;
+		this.plays = 0;
+	}
+	
+	public UserSong(Song s) {
+		super(s.getTitle(), s.getArtist(), s.getAlbum());
+		
 		this.rating = 0;
 		this.isFavorite = false;
 		this.plays = 0;
@@ -30,21 +37,6 @@ public class SongWrapper {
 			this.setFavorite();
 	}
 	
-	/*
-	 * 		Getters
-	 */
-	public String getTitle() {
-		return this.song.getTitle();
-	}
-	
-	public String getArtist() {
-		return this.song.getArtist();
-	}
-
-	public String getAlbum() {
-		return this.song.getAlbum();
-	}
-
 	public int getRating() {
 		return this.rating;
 	}
@@ -56,4 +48,5 @@ public class SongWrapper {
 	public boolean isFavorite() {
 		return isFavorite;
 	}	
+
 }
