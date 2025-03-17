@@ -39,7 +39,18 @@ public class Album {
 		this.genre  = genre;
 		this.year   = year;
 		
-		this.songList = new ArrayList<Song>(songs);
+		this.songList = new ArrayList<Song>();
+		for(Song s : songs) 
+			this.songList.add(s);
+	}
+	
+	public Album(Album a) {
+		this.name   = a.getName();
+		this.artist = a.getArtist();
+		this.genre  = a.getGenre();
+		this.year   = a.getYear();
+		
+		this.songList = a.getSongs();
 	}
 	
 	
