@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Comparator;
+
 public class UserSong extends Song{
 	private int rating;
 	private boolean isFavorite;
@@ -47,6 +49,45 @@ public class UserSong extends Song{
 	
 	public boolean isFavorite() {
 		return isFavorite;
-	}	
+	}
+	
+	public static Comparator<UserSong> titleFirstComparator(){
+		return new Comparator<UserSong>() {
+			public int compare(UserSong song1, UserSong song2) {
+				int comp = song1.getTitle().compareTo(song2.getTitle());
+				if (comp == 0) {
+					comp = song1.getArtist().compareTo(song2.getArtist());
+				}
+				return comp;
+			}
+		};
+	}
+	
+	public static Comparator<UserSong> artistFirstComparator(){
+		return new Comparator<UserSong>() {
+			public int compare(UserSong song1, UserSong song2) {
+				int comp = song1.getArtist().compareTo(song2.getArtist());
+				if (comp == 0) {
+					comp = song1.getTitle().compareTo(song2.getTitle());
+				}
+				return comp;
+			}
+		};
+	}
+	
+	public static Comparator<UserSong> ratingFirstComparator(){
+		return new Comparator<UserSong>() {
+			public int compare(UserSong song1, UserSong song2) {
+				int comp = Integer.compare(song1.rating,song2.rating);
+				if (comp == 0) {
+					comp = song1.getTitle().compareTo(song2.getTitle());
+				}
+				if (comp == 0) {
+					comp = song1.getArtist().compareTo(song2.getArtist());
+				}
+				return comp;
+			}
+		};
+	}
 
 }
