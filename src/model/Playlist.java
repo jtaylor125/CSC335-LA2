@@ -11,6 +11,7 @@ package model;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Playlist {
 	
@@ -71,6 +72,10 @@ public class Playlist {
 	/*
 	 * 		Overridden toString method (playlist name and songs)
 	 */
+	
+	public void shuffle() {
+		Collections.shuffle(playlist);
+	}
 	
 	@Override
 	public String toString() {

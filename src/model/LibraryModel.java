@@ -13,6 +13,7 @@ package model;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LibraryModel {
 	
@@ -52,15 +53,17 @@ public class LibraryModel {
 	/*
 	 * 		Search Methods
 	 */
-	public String search(String s, String songOrAlbum, String titleOrArtist) {
-		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Title"))
+	public String search(String s, String songOrAlbum, String titleOrArtistOrGenre) {
+		if(songOrAlbum.equals("Song") && titleOrArtistOrGenre.equals("Title"))
 			return searchSongTitle(s);
-		if(songOrAlbum.equals("Song") && titleOrArtist.equals("Artist"))
+		if(songOrAlbum.equals("Song") && titleOrArtistOrGenre.equals("Artist"))
 			return searchSongArtist(s);
-		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Title"))
+		if(songOrAlbum.equals("Album") && titleOrArtistOrGenre.equals("Title"))
 			return searchAlbumTitle(s);
-		if(songOrAlbum.equals("Album") && titleOrArtist.equals("Artist"))
+		if(songOrAlbum.equals("Album") && titleOrArtistOrGenre.equals("Artist"))
 			return searchAlbumArtist(s);
+		if(songOrAlbum.equals("Song") && titleOrArtistOrGenre.equals("Genre"))
+			return searchSongGenre(s);
 		
 		return "Incorrect parameters sent, check code\n";
 	}
@@ -111,6 +114,20 @@ public class LibraryModel {
 					retval = retval + s.getTitle() + "\n";
 			}
 		}
+		return retval;
+	}
+	
+	public String searchSongGenre(String val) {
+		String retval = "";
+		
+		for (UserAlbum a : this.albums) {
+			if (val.equals(a.getGenre())) {
+				for (Song s : a.getUserSongs()) {
+					retval = retval + s.toString();
+				}
+			}
+		}
+		
 		return retval;
 	}
 	
@@ -213,6 +230,72 @@ public class LibraryModel {
 		// need to add getTitle to song
 		for (int i=0; i<library.size();i++) {
 			titles.add(library.get(i).getTitle());
+		}
+		
+		String retval = "";
+		for (String t : titles)
+			retval = retval + t + "\n";
+		
+		return retval;
+	}
+	
+	public String getSortedSongTitlesTitle(String ascendingOrDescending) {
+		ArrayList<UserSong> sortedSongs = new ArrayList<UserSong>(this.library);
+		
+		Collections.sort(sortedSongs,UserSong.titleFirstComparator());
+		
+		if (ascendingOrDescending.equals("Descending")) {
+			Collections.reverse(sortedSongs);
+		}
+		
+		ArrayList<String> titles = new ArrayList<String>();
+		
+		for (int i=0; i<sortedSongs.size();i++) {
+			titles.add(sortedSongs.get(i).getTitle());
+		}
+		
+		String retval = "";
+		for (String t : titles)
+			retval = retval + t + "\n";
+		
+		return retval;
+	}
+	
+	public String getSortedSongTitlesArtist(String ascendingOrDescending) {
+		ArrayList<UserSong> sortedSongs = new ArrayList<UserSong>(this.library);
+		
+		Collections.sort(sortedSongs,UserSong.artistFirstComparator());
+		
+		if (ascendingOrDescending.equals("Descending")) {
+			Collections.reverse(sortedSongs);
+		}
+		
+		ArrayList<String> titles = new ArrayList<String>();
+		
+		for (int i=0; i<sortedSongs.size();i++) {
+			titles.add(sortedSongs.get(i).getTitle());
+		}
+		
+		String retval = "";
+		for (String t : titles)
+			retval = retval + t + "\n";
+		
+		return retval;
+	}
+
+	public String getSortedSongTitlesRating(String ascendingOrDescending) {
+		ArrayList<UserSong> sortedSongs = new ArrayList<UserSong>(this.library);
+		
+		Collections.sort(sortedSongs,UserSong.ratingFirstComparator());
+		
+		if (ascendingOrDescending.equals("Descending")) {
+			Collections.reverse(sortedSongs);
+		}
+		
+		ArrayList<String> titles = new ArrayList<String>();
+		
+		for (int i=0; i<sortedSongs.size();i++) {
+			titles.add(sortedSongs.get(i).getTitle());
 		}
 		
 		String retval = "";
@@ -389,6 +472,14 @@ public class LibraryModel {
 		return null;
 	}
 	
+	public void shufflePlaylist(String name) {
+		for (Playlist p: playlistList) {
+			if (p.getName().equals(name)) {
+				p.shuffle();
+			}
+		}
+	}
+	
 	private void updateFavorites() {
 		for(UserSong us : this.library) 
 			if(us.isFavorite() && !this.favorites.hasSong(us))
@@ -465,6 +556,10 @@ public class LibraryModel {
 		UserSong song = this.getSong(title, artist);
 		
 		song.playSong();
+	}
+	
+	public void shuffleLibrary() {
+		Collections.shuffle(this.library);
 	}
 	
 	// Song getSong - private helper method to get a song object from the library. Returns null
