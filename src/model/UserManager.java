@@ -32,7 +32,7 @@ public class UserManager {
 			database.put(s, null);
 		}
 		
-		salt = "[B@254989ff".getBytes();
+		this.salt = "[B@254989ff".getBytes();
 	}
 	
 	// NEEDS COMMENT
@@ -170,10 +170,20 @@ public class UserManager {
 			LibraryModel currLib = this.database.get(s);
 			
 			if(currLib != null) {
-				//TODO
-			}
-			
-			//TODO
+				FileWriter currUserFile = new FileWriter("User__" + s + "__.txt", false);
+				//DO ALL WRITING FOR CURRENT USER
+				currUserFile.write(currLib.getLibrarySongInformation());
+				currUserFile.write("Recents\n");
+				currUserFile.write(currLib.getRecentsPlaylist());
+				
+				
+				currUserFile.write("Playlists\n");
+				//TODO: write playlist count
+				//TODO: write playlists
+				
+				currUserFile.write("End");
+				currUserFile.close();
+			}		
 		}
 		
 		//TODO

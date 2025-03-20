@@ -26,6 +26,7 @@ import java.util.Scanner;
 
 import model.LibraryModel;
 import model.MusicStore;
+import model.UserManager;
 
 public class Main {
 	public static void main(String[] args) {
@@ -39,9 +40,69 @@ public class Main {
 		System.out.println("Loading Music Store...");
 		MusicStore   store    = new MusicStore();
 				
-		System.out.println("Initializing Library...");
-		LibraryModel library  = new LibraryModel();
+
+		System.out.println("Loading user database...");
+		UserManager userMan = new UserManager();
+		boolean doNotExit = true;;
 		
+		while(doNotExit) {
+			System.out.println("To login to an existing account, type: \"Login\"");
+			System.out.println("To create a new account, type: \"Create\"");
+			System.out.println("To exit, type: \"Exit\"");
+			String input = systemIn.nextLine().strip();
+			
+			if(input.equals("Exit")) {
+				doNotExit = false;
+			} else if (input.equals("Create")) {
+				boolean exitIfElseBlock = false;
+				System.out.println("Please enter a username (with no spaces):");
+				String username = systemIn.next();
+				while(userMan.isUser(username) && !exitIfElseBlock) {
+					System.out.println("Username already in use, pick a different one:");
+					username = systemIn.next();
+					if(username.equals("Exit"))
+						exitIfElseBlock = true;
+				}
+				
+				if(!exitIfElseBlock) {
+					System.out.println("Please enter a password (with no spaces):");
+					String password = systemIn.next();
+				
+					runCommandLoop(systemIn, store, userMan.createUser(username, password));
+				}
+			} else if (input.equals("Login")) {
+				boolean exitIfElseBlock = false;
+				System.out.println("Please enter your username:");
+				String username = systemIn.next();
+				while(!userMan.isUser(username) && !exitIfElseBlock) {
+					System.out.println("Username doesnt exist, try again or type \"Exit\":");
+					username = systemIn.next();
+					if(username.equals("Exit"))
+						exitIfElseBlock = true;
+				}
+				
+				if(!exitIfElseBlock) {
+					System.out.println("Please enter your password:");
+					String password = systemIn.next();
+					
+					while(!userMan.checkCredentials(username, password) && !exitIfElseBlock) {
+						System.out.println("Incorrect password, try again or type \"Exit\"");
+						password = systemIn.next();
+						
+						if(password.equals("Exit"))
+							exitIfElseBlock = true;
+					}
+					
+					if(!exitIfElseBlock)
+						runCommandLoop(systemIn, store, userMan.login(username, password, store));
+				}
+			} else {
+				System.out.println("Command not recognized, try again");
+			} // end if else block
+		} // end login while loop
+	} // end main method
+	
+	public static void runCommandLoop(Scanner systemIn, MusicStore store, LibraryModel library) {
 		System.out.println("To use the program type in a a command and press enter, or type \"Help\" and press enter to get started with a list of commands");
 		
 		String command = systemIn.nextLine().strip();
@@ -66,8 +127,8 @@ public class Main {
 			System.out.println("Ready for next command:");
 			command = systemIn.nextLine();
 		}
-		
 	}
+
 	
 	public static void printCommandList() {
 		System.out.print("Help:        ");
