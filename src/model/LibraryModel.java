@@ -14,6 +14,9 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LibraryModel {
 	
@@ -24,6 +27,9 @@ public class LibraryModel {
 	private ArrayList<UserSong> library;
 	private ArrayList<UserAlbum> albums;
 	private ArrayList<Playlist> playlistList;
+	
+	private HashMap<UserSong,Integer> songPlays;
+	private ArrayList<UserSong> recentsList;
 	
 	private Playlist recents;
 	private Playlist favorites;
@@ -41,6 +47,9 @@ public class LibraryModel {
 		this.albums = new ArrayList<UserAlbum>();
 		
 		this.playlistList = new ArrayList<Playlist>();
+		
+		this.songPlays = new HashMap<UserSong, Integer>();
+		this.recentsList = new ArrayList<UserSong>();
 		
 		this.recents   = new Playlist("Recents");
 		this.favorites = new Playlist("Favorites");
@@ -493,7 +502,23 @@ public class LibraryModel {
 	}
 	
 	private void updateFrequents() {
-		//TODO
+		ArrayList<Map.Entry<UserSong,Integer>> frequents = new ArrayList(this.songPlays.entrySet());
+		
+		frequents.sort((a,b) -> b.getValue().compareTo(a.getValue()));
+		
+		ArrayList<UserSong> top10frequents = new ArrayList<UserSong>();
+		
+		for (int i=0; i< Math.min(10,frequents.size());i++) {
+			top10frequents.add(frequents.get(i).getKey());
+		}
+		
+		Collections.reverse(top10frequents);
+		
+		this.frequents.clear();
+		
+		for (int i=0; i<top10frequents.size(); i++) {
+			this.frequents.add(top10frequents.get(i));
+		}
 	}
 	
 	private void updateGenres() {
@@ -501,15 +526,27 @@ public class LibraryModel {
 	}
 	
 	private void updateRecents(UserSong mostRecent) {
-		//TODO
-	}
-	
-	void setMostRecent(String title, String artist) {
-		//TODO
+		this.recentsList.add(mostRecent);
+		Collections.reverse(recentsList);
+		this.recents.clear();
+		
+		for (int i=0; i<Math.min(10,recentsList.size());i++) {
+			this.recents.add(recentsList.get(i));
+		}
+			
+		Collections.reverse(recentsList);
 	}
 	
 	private void removeFromRecents(UserSong toRemove) {
-		//TODO
+		this.recentsList.remove(toRemove);
+		Collections.reverse(recentsList);
+		this.recents.clear();
+		
+		for (int i=0; i<Math.min(10,recentsList.size());i++) {
+			this.recents.add(recentsList.get(i));
+		}
+			
+		Collections.reverse(recentsList);
 	}
 	
 	
@@ -542,6 +579,10 @@ public class LibraryModel {
 		UserSong song = this.getSong(songName, artist);
 		
 		song.rate(rating);
+		
+		if (rating == 5) {
+			
+		}
 	}
 	
 	// int getSongRating - package-only helper method for testing the class. Returns the
@@ -556,6 +597,16 @@ public class LibraryModel {
 		UserSong song = this.getSong(title, artist);
 		
 		song.playSong();
+		
+		if (!songPlays.containsKey(song)) {
+			songPlays.put(song, 1);
+		} else {
+			songPlays.put(song, songPlays.get(song)+1);
+		}
+		
+		// update playlists
+		this.updateRecents(song);
+		this.updateFrequents();
 	}
 	
 	public void shuffleLibrary() {

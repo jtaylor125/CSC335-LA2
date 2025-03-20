@@ -77,6 +77,10 @@ public class Playlist {
 		Collections.shuffle(playlist);
 	}
 	
+	public void clear() {
+		this.playlist = new ArrayList<Song>();
+	}
+	
 	@Override
 	public String toString() {
 		String retval = "Playlist : " + this.name + "\n";
