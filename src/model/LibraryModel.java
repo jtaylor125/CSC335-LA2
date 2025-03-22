@@ -30,13 +30,12 @@ public class LibraryModel {
 	
 	private HashMap<UserSong,Integer> songPlays;
 	private ArrayList<UserSong> recentsList;
+	private HashMap<String, Integer> genreCounts;
 	
 	private Playlist recents;
 	private Playlist favorites;
 	private Playlist frequents;
 	private Playlist topRated;
-	
-	private ArrayList<Playlist> genres;
 	
 	/*
 	 * 		Constructor
@@ -50,13 +49,12 @@ public class LibraryModel {
 		
 		this.songPlays = new HashMap<UserSong, Integer>();
 		this.recentsList = new ArrayList<UserSong>();
+		this.genreCounts = new HashMap<String, Integer>();
 		
 		this.recents   = new Playlist("Recents");
 		this.favorites = new Playlist("Favorites");
 		this.frequents = new Playlist("Frequents");
 		this.topRated  = new Playlist("Top Rated");
-		
-		this.genres = new ArrayList<Playlist>();
 	}
 	
 	/*
@@ -162,6 +160,13 @@ public class LibraryModel {
 		library.add(newSong);
 		this.getAlbum(song.getAlbum(), artist).addSong(newSong);
 		
+		String genre = this.getAlbum(song.getAlbum(), artist).getGenre();
+		if (this.genreCounts.containsKey(genre)) {
+			genreCounts.put(genre, genreCounts.get(genre)+1);
+		} else {
+			genreCounts.put(genre, 1);
+		}
+		
 		return true;
 	}
 	
@@ -193,14 +198,17 @@ public class LibraryModel {
 	public void removeSong(String title, String artist) {
 		UserSong song = this.getSong(title, artist);
 		
+		String genre = this.getAlbum(song.getAlbum(), artist).getGenre();
+		
+		genreCounts.put(genre, genreCounts.get(genre)-1);
+		
 		if(this.getAlbum(song.getAlbum(), artist).getUserSongs().size() == 1)
 			this.albums.remove(this.getAlbum(song.getAlbum(), artist));
 		else
 			this.getAlbum(song.getAlbum(), artist).removeSong(song);
 		
-		
 		this.library.remove(song);
-		
+
 		for(Playlist p : this.playlistList)
 			if(p.hasSong(song))
 				p.removeSong(song);
@@ -224,6 +232,8 @@ public class LibraryModel {
 				if(p.hasSong(s))
 					p.removeSong(s);
 		}
+		
+		albums.removeIf(a -> a.getName().equals(name) && a.getArtist().equals(artist));
 		
 		this.updateFavorites();
 		this.updateFrequents();
@@ -522,7 +532,27 @@ public class LibraryModel {
 	}
 	
 	private void updateGenres() {
-		//TODO
+		ArrayList<Map.Entry<String,Integer>> genreList = new ArrayList(this.genreCounts.entrySet());
+		
+		ArrayList<String> genresWith10 = new ArrayList<String>();
+		
+		for (int i=0; i<genreList.size(); i++) {
+			if (genreList.get(i).getValue() >= 10) {
+				genresWith10.add(genreList.get(i).getKey());
+			}
+		}
+		
+		for (String genre : genresWith10) {
+			this.createPlaylist(genre);
+			
+			for (UserAlbum album : this.albums) {
+				if (album.getGenre().equals(genre)){
+					for (Song song : album.getSongs()) {
+						this.addToPlaylist(song.getTitle(), song.getArtist(), genre);
+					}
+				}
+			}
+		}
 	}
 	
 	private void updateRecents(UserSong mostRecent) {

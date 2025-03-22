@@ -118,6 +118,23 @@ class LibraryModelTest {
 		assertEquals(search,expected);
 	}
 	
+	@Test 
+	void SongGenreSearch(){
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Heavy for You", "The Heavy", ms);
+		library.addSong("Lullaby", "OneRepublic", ms);
+		
+		String search = library.search("Rock", "Song", "Genre");
+		String expected = "Heavy for You\n"
+				+ "Artist: The Heavy\n"
+				+ "Album:  Sons\n"
+				+ "Lullaby\n"
+				+ "Artist: OneRepublic\n"
+				+ "Album:  Waking Up\n";
+		assertEquals(search,expected);
+	}
+	
 	@Test
 	void testIncorrectParamsSearch() {
 		LibraryModel library = new LibraryModel();
@@ -168,10 +185,56 @@ class LibraryModelTest {
 		
 		String albums = library.getAlbums();
 		
-		String expected = "Begin Again\nSons\n";
-		System.out.println("START");
+		String expected = "19\nBegin Again\nCuando Los Angeles Lloran\nSons\n";
+		assertEquals(albums,expected);
+	}
+	
+	
+	@Test
+	void testRemoveSong() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		
+		String titles = library.getSongTitles();
+		
+		String expected = "Tired\nUh Oh\nSelva Negra\n";
+		
+		assertEquals(titles,expected);
+		
+		library.removeSong("Uh Oh", "Norah Jones");
+		
+		String titles2 = library.getSongTitles();
+		
+		String expected2 = "Tired\nSelva Negra\n";
+		
+		assertEquals(titles2,expected2);
+	}
+	
+	@Test
+	void removeAlbum() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.addAlbum("Begin Again", "Norah Jones", ms);
+		library.addAlbum("Sons", "The Heavy", ms);
+		
+		String albums = library.getAlbums();
+		
+		String expected = "19\nBegin Again\nCuando Los Angeles Lloran\nSons\n";
+		assertEquals(albums,expected);
+		
+		library.removeAlbum("Sons", "The Heavy");
+		
+		albums = library.getAlbums();
+		expected = "19\nBegin Again\nCuando Los Angeles Lloran\n";
 		System.out.println(albums);
-		System.out.println("END");
 		assertEquals(albums,expected);
 	}
 	
