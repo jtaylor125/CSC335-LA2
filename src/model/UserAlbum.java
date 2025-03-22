@@ -7,12 +7,12 @@ public class UserAlbum extends Album {
 	
 	public UserAlbum(Album a) {
 		super(a.getName(), a.getArtist(), a.getGenre(), a.getYear(), a.getSongs());
-	
 		int numSongs = this.getSongs().size();
 		addedSongs = new ArrayList<UserSong>(numSongs);
 		
 		for(int i = 0; i < numSongs; i++) 
 			addedSongs.set(i, null);
+		addedSongs = new ArrayList<UserSong>();
 	}
 	
 	public void addSong(UserSong song) {
@@ -25,15 +25,13 @@ public class UserAlbum extends Album {
 			if(songTitle.equals(albumSongs.get(i).getTitle()))
 				index = i;
 		
-		if(addedSongs.get(index) == null)
-			addedSongs.set(index, song);
+		addedSongs.add(song);
 	}
 	
 	public void removeSong(UserSong song) {
 		for(int i = 0; i < addedSongs.size(); i++) 
-			if(addedSongs.get(i) != null)
-				if(song.getTitle().equals(addedSongs.get(i).getTitle()))
-					addedSongs.set(i, null);
+			if(song.getTitle().equals(addedSongs.get(i).getTitle()))
+				addedSongs.remove(i);
 	}
 	
 	public ArrayList<UserSong> getUserSongs(){
