@@ -7,7 +7,11 @@ public class UserAlbum extends Album {
 	
 	public UserAlbum(Album a) {
 		super(a.getName(), a.getArtist(), a.getGenre(), a.getYear(), a.getSongs());
-	
+		int numSongs = this.getSongs().size();
+		addedSongs = new ArrayList<UserSong>(numSongs);
+		
+		for(int i = 0; i < numSongs; i++) 
+			addedSongs.set(i, null);
 		addedSongs = new ArrayList<UserSong>();
 	}
 	

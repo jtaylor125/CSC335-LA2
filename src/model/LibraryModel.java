@@ -324,6 +324,25 @@ public class LibraryModel {
 		return retval;
 	}
 	
+	String getLibrarySongInformation() {
+		String retval = "";
+		
+		for(UserSong s : this.library) {
+			retval = retval + s.getTitle()  + ",";
+			retval = retval + s.getArtist() + ",";
+			
+			if(s.isFavorite())
+				retval = retval + "1" + ",";
+			else
+				retval = retval + "0" + ",";
+			
+			retval = retval + s.getRating()    + ",";
+			retval = retval + s.getPlayCount() + "\n";
+		}
+		
+		return retval;
+	}
+	
 	// String getArtists - returns one String with all of the artists in the library on
 	// different lines in the order they were added.
 	public String getArtists(){
@@ -499,13 +518,13 @@ public class LibraryModel {
 		}
 	}
 	
-	private void updateFavorites() {
+	void updateFavorites() {
 		for(UserSong us : this.library) 
 			if(us.isFavorite() && !this.favorites.hasSong(us))
 				this.favorites.add(us);
 	}
 	
-	private void updateTopRated() {
+	void updateTopRated() {
 		for(UserSong us : this.library)
 			if(((us.getRating() == 4) || (us.getRating() == 5)) && !this.topRated.hasSong(us))
 				this.topRated.add(us);
@@ -578,6 +597,24 @@ public class LibraryModel {
 			
 		Collections.reverse(recentsList);
 	}
+	
+	//TODO
+	// returns String with songs in recents playlist listed
+	// one per line
+	public String getRecentsPlaylist() {
+		return null;
+	}
+	
+	//TODO
+	public String getFrequentsPlaylist() {
+		return null;
+	}
+	
+	//TODO
+	public String getTopRateddPlaylist() {
+		return null;
+	}
+	
 	
 	
 	// boolean checkSongInLibrary - checks if a song identified by its name and artist is in the 
