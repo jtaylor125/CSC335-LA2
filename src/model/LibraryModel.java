@@ -124,7 +124,8 @@ public class LibraryModel {
 		return retval;
 	}
 	
-	public String searchSongGenre(String val) {
+	//TODO: COMMENT
+	private String searchSongGenre(String val) {
 		String retval = "";
 		
 		for (UserAlbum a : this.albums) {
@@ -194,7 +195,7 @@ public class LibraryModel {
 		return true;
 	}
 	
-	//TODO// NEEDS COMMENT
+	//TODO: COMMENT
 	public boolean removeSong(String title, String artist) {
 		UserSong song = this.getSong(title, artist);
 		
@@ -226,7 +227,7 @@ public class LibraryModel {
 	}
 	
 	
-	//TODO// NEEDS COMMENT
+	//TODO: COMMENT
 	public boolean removeAlbum(String name, String artist) {
 		UserAlbum album = this.getAlbum(name, artist);
 		
@@ -271,6 +272,7 @@ public class LibraryModel {
 		return retval;
 	}
 	
+	//TODO: COMMENT
 	public String getSortedSongTitlesTitle(String ascendingOrDescending) {
 		ArrayList<UserSong> sortedSongs = new ArrayList<UserSong>(this.library);
 		
@@ -293,6 +295,7 @@ public class LibraryModel {
 		return retval;
 	}
 	
+	//TODO: COMMENT
 	public String getSortedSongTitlesArtist(String ascendingOrDescending) {
 		ArrayList<UserSong> sortedSongs = new ArrayList<UserSong>(this.library);
 		
@@ -315,6 +318,7 @@ public class LibraryModel {
 		return retval;
 	}
 
+	//TODO: COMMENT
 	public String getSortedSongTitlesRating(String ascendingOrDescending) {
 		ArrayList<UserSong> sortedSongs = new ArrayList<UserSong>(this.library);
 		
@@ -337,6 +341,8 @@ public class LibraryModel {
 		return retval;
 	}
 	
+	//TODO: COMMENT
+	// used by UserManager to save library information to file  
 	String getLibrarySongInformation() {
 		String retval = "";
 		
@@ -397,7 +403,7 @@ public class LibraryModel {
 	public String getPlaylists(){
 		ArrayList<String> playlists = new ArrayList<String>();
 		
-		// need to add getAlbum to song
+		// need to add getAlbum to song ???TODO???
 		for (int i=0; i<playlistList.size();i++) {
 			if (!playlists.contains(playlistList.get(i).getName())) {
 				playlists.add(playlistList.get(i).toString());
@@ -428,6 +434,12 @@ public class LibraryModel {
 			retval = retval + f + "\n";
 		
 		return retval;
+	}
+	
+	//TODO: COMMENT
+	public String getInfoAfterSearch(String songName, String artist) {
+		//TODO
+		return null;
 	}
 	
 	// boolean createPlaylist - creates a playlist named by the parameter. If a playlist already
@@ -492,9 +504,21 @@ public class LibraryModel {
 	// if it does and false if it does not.
 	public boolean checkPlaylistExistence(String playlistName) {
 		for (Playlist p : playlistList)
-			if (p.getName().equals(playlistName)) {
+			if (p.getName().equals(playlistName)) 
 				return true;
-			}
+		
+		if (playlistName.equals("Reecents"))
+			return true;
+		else if (playlistName.equals("Frequents"))
+			return true;
+		else if (playlistName.equals("Favorites"))
+			return true;
+		else if (playlistName.equals("Top Rated"))
+			return true;
+	
+		//TODO: genre playlists?
+		
+		
 		return false;
 	}
 	
@@ -523,6 +547,7 @@ public class LibraryModel {
 		return null;
 	}
 	
+	//TODO: COMMENT
 	public void shufflePlaylist(String name) {
 		for (Playlist p: playlistList) {
 			if (p.getName().equals(name)) {
@@ -531,18 +556,21 @@ public class LibraryModel {
 		}
 	}
 	
+	//TODO: COMMENT
 	void updateFavorites() {
 		for(UserSong us : this.library) 
 			if(us.isFavorite() && !this.favorites.hasSong(us))
 				this.favorites.add(us);
 	}
 	
+	//TODO: COMMENT
 	void updateTopRated() {
 		for(UserSong us : this.library)
 			if(((us.getRating() == 4) || (us.getRating() == 5)) && !this.topRated.hasSong(us))
 				this.topRated.add(us);
 	}
 	
+	//TODO: COMMENT
 	private void updateFrequents() {
 		ArrayList<Map.Entry<UserSong,Integer>> frequents = new ArrayList(this.songPlays.entrySet());
 		
@@ -563,6 +591,7 @@ public class LibraryModel {
 		}
 	}
 	
+	//TODO: COMMENT
 	private void updateGenres() {
 		ArrayList<Map.Entry<String,Integer>> genreList = new ArrayList(this.genreCounts.entrySet());
 		
@@ -587,6 +616,18 @@ public class LibraryModel {
 		}
 	}
 	
+	//TODO: COMMENT
+	void setMostRecent(String songTitle, String artist) {
+		UserSong mostRecent = this.getSong(songTitle, artist);
+		
+		if(mostRecent != null) {
+			this.updateRecents(mostRecent);
+		}
+	}
+	
+	
+	//TODO: COMMENT
+	// Used by usermanager in construction of accounts
 	private void updateRecents(UserSong mostRecent) {
 		this.recentsList.add(mostRecent);
 		Collections.reverse(recentsList);
@@ -599,6 +640,7 @@ public class LibraryModel {
 		Collections.reverse(recentsList);
 	}
 	
+	//TODO: COMMENT
 	private void removeFromRecents(UserSong toRemove) {
 		this.recentsList.remove(toRemove);
 		Collections.reverse(recentsList);
@@ -611,11 +653,44 @@ public class LibraryModel {
 		Collections.reverse(recentsList);
 	}
 	
-	//TODO
+	//TODO: COMMENT
+	String getPlaylistNames() {
+		String retval = "";
+		
+		for(Playlist p:this.playlistList) {
+			retval = retval + p.getName() + "\n";
+		}
+		
+		return retval;
+	}
+
+	//TODO: COMMENT
+	public String getPlaylistSongs(String playlistName) {
+		Playlist curr = this.getPlaylist(playlistName);
+		
+		if(curr == null) {
+			return null;
+		}
+		
+		String retval = "";
+		
+		for(Song s :curr.getSongList()) {
+			retval = retval + s.getTitle() + "," + s.getArtist() + "\n";
+		}
+		
+		return retval;
+	}
+	
+	//
 	// returns String with songs in recents playlist listed
 	// one per line
 	public String getRecentsPlaylist() {
-		return null;
+		String retval = "";
+		
+		for(Song s: this.recents.getSongList()) {
+			retval = retval + s.getTitle() + "," + s.getArtist() + "\n";
+		}
+		return retval;
 	}
 	
 	//TODO

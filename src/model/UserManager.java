@@ -35,7 +35,7 @@ public class UserManager {
 		this.salt = "[B@254989ff".getBytes();
 	}
 	
-	// NEEDS COMMENT
+	//TODO: COMMENT
 	private HashMap<String, String> buildPasswords(Scanner inFile) {
 		HashMap<String, String> retMap = new HashMap<>();
 		
@@ -50,12 +50,12 @@ public class UserManager {
 		return retMap;
 	}
 	
-	// NEEDS COMMENT
+	//TODO: COMMENT
 	public boolean isUser(String username) {
 		return passwords.keySet().contains(username);
 	}
 	
-	// NEEDS COMMENT
+	//TODO: COMMENT
 	public LibraryModel createUser(String username, String password) {
 		this.passwords.put(username, this.hashPassword(password));
 		
@@ -89,7 +89,7 @@ public class UserManager {
 		return userLib;
 	}
 	
-	// NEEDS COMMENT
+	//TODO: COMMENT
 	private LibraryModel buildLibrary(String username, MusicStore ms) {
 		LibraryModel lib = new LibraryModel();
 		String fileName = "User__" + username + "__.txt";
@@ -157,7 +157,7 @@ public class UserManager {
 		return lib;
 	} // end method buildLibrary
 	
-	// NEEDS COMMENT
+	//TODO: COMMENT
 	public void saveToFiles() throws IOException {
 		Set<String> users = this.passwords.keySet();
 		
@@ -178,19 +178,30 @@ public class UserManager {
 				
 				
 				currUserFile.write("Playlists\n");
-				//TODO: write playlist count
-				//TODO: write playlists
+				int count = 0;
+				String writeVal = "";
 				
+				String playlists[] = currLib.getPlaylistNames().split("\n");
+				
+				for(int i = 0; i < playlists.length; i++) {
+					count++;
+					
+					writeVal = writeVal + "Playlist:\n";
+					writeVal = writeVal + playlists[i] + "\n"; 
+					writeVal = writeVal + currLib.getPlaylistSongs(playlists[i]);
+				}
+				
+				currUserFile.write(String.valueOf(count) + "\n");
+				currUserFile.write(writeVal);
 				currUserFile.write("End");
 				currUserFile.close();
 			}		
 		}
 		
-		//TODO
 		userInfo.close();
 	}
 	
-	// NEEDS COMMENT
+	//TODO: COMMENT
 	private String hashPassword(String password) {
 		MessageDigest md;
 		try {

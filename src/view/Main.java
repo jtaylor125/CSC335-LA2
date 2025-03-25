@@ -1,5 +1,7 @@
 package view;
 
+import java.io.IOException;
+
 /*
  * File:	Main.java
  * Project: LA1-MusicLibrary
@@ -100,6 +102,12 @@ public class Main {
 				System.out.println("Command not recognized, try again");
 			} // end if else block
 		} // end login while loop
+		try {
+			userMan.saveToFiles();
+		} catch (IOException e) {
+			System.out.println("Failed to save user information to files due to IOException");
+			System.out.println("Information may be lost");
+		}
 	} // end main method
 	
 	public static void runCommandLoop(Scanner systemIn, MusicStore store, LibraryModel library) {
@@ -159,7 +167,10 @@ public class Main {
 		System.out.println("Allows you to rate a song from the Library on a scale of 1-5");
 		
 		System.out.print("Play:        ");
-		System.out.println("Allows you to play a song (and shuffle) songs and playlists");
+		System.out.println("Allows you to search and play songs and playlists");
+		
+		System.out.print("Shuffle:     ");
+		System.out.println("Allows you to shuffle and play the library or any playlist");
 		
 		System.out.print("Remove:      ");
 		System.out.println("Allows you to remove a song or album from the Library");
@@ -199,7 +210,7 @@ public class Main {
 					System.out.println("Enter Song Artist from Search:");
 					String songArtist = s.nextLine().strip();
 					
-					moreInfo = library.getSongInfo(songTitle, songArtist);
+					moreInfo = library.getInfoAfterSearch(songTitle, songArtist);
 					
 					if(moreInfo.equals(""))
 						System.out.println("No song found");
@@ -494,9 +505,23 @@ public class Main {
 		String libOrPlaylist = s.nextLine().strip();
 		
 		if(libOrPlaylist.equals("Library")) {
+			System.out.println("Shuffling Library...");
+			library.shuffleLibrary();
 			
+			
+			//TODO shuffle next song
 		} else if (libOrPlaylist.equals("Playlist")) {
+			System.out.println("Enter name of playlist");
+			String playlistName = s.nextLine().strip();
 			
+			if(library.checkPlaylistExistence(playlistName)) {
+				library.shufflePlaylist(playlistName);
+				
+				//TODO playlist next shuffled song
+			} else {
+				System.out.printf("No playlists named \"%s\" in library\n", playlistName);
+				System.out.println("Returning...");
+			}
 		} else {
 			System.out.printf("%s not shufflable\n", libOrPlaylist);
 		}

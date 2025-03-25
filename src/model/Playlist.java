@@ -69,6 +69,10 @@ public class Playlist {
 		return playlist.size();
 	}
 	
+	public ArrayList<Song> getSongList(){
+		return new ArrayList<Song>(this.playlist);
+	}
+	
 	/*
 	 * 		Overridden toString method (playlist name and songs)
 	 */
