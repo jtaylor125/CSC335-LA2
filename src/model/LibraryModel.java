@@ -263,7 +263,7 @@ public class LibraryModel {
 		
 		Collections.sort(sortedSongs,UserSong.titleFirstComparator());
 		
-		if (ascendingOrDescending.equals("Descending")) {
+		if (ascendingOrDescending.toLowerCase().equals("descending")) {
 			Collections.reverse(sortedSongs);
 		}
 		
@@ -285,7 +285,7 @@ public class LibraryModel {
 		
 		Collections.sort(sortedSongs,UserSong.artistFirstComparator());
 		
-		if (ascendingOrDescending.equals("Descending")) {
+		if (ascendingOrDescending.toLowerCase().equals("descending")) {
 			Collections.reverse(sortedSongs);
 		}
 		
@@ -307,7 +307,7 @@ public class LibraryModel {
 		
 		Collections.sort(sortedSongs,UserSong.ratingFirstComparator());
 		
-		if (ascendingOrDescending.equals("Descending")) {
+		if (ascendingOrDescending.toLowerCase().equals("descending")) {
 			Collections.reverse(sortedSongs);
 		}
 		
@@ -513,7 +513,14 @@ public class LibraryModel {
 	public void shufflePlaylist(String name) {
 		for (Playlist p: playlistList) {
 			if (p.getName().equals(name)) {
+				String playlistInfo = p.toString();
 				p.shuffle();
+				String newPlaylistInfo = p.toString();
+				while (newPlaylistInfo.equals(playlistInfo) && p.getSize() >= 2) {
+					p.shuffle();
+					newPlaylistInfo = p.toString();
+				}
+				
 			}
 		}
 	}
@@ -540,8 +547,6 @@ public class LibraryModel {
 		for (int i=0; i< Math.min(10,frequents.size());i++) {
 			top10frequents.add(frequents.get(i).getKey());
 		}
-		
-		Collections.reverse(top10frequents);
 		
 		this.frequents.clear();
 		
@@ -598,23 +603,29 @@ public class LibraryModel {
 		Collections.reverse(recentsList);
 	}
 	
-	//TODO
-	// returns String with songs in recents playlist listed
-	// one per line
 	public String getRecentsPlaylist() {
-		return null;
+		return this.recents.toString();
 	}
 	
-	//TODO
 	public String getFrequentsPlaylist() {
-		return null;
+		return this.frequents.toString();
 	}
 	
-	//TODO
 	public String getTopRateddPlaylist() {
-		return null;
+		return this.topRated.toString();
 	}
 	
+	public String getGenrePlaylists() {
+		String retVal = "";
+		
+		for (Playlist p : this.playlistList) {
+			if (this.genreCounts.keySet().contains(p.getName())) {
+				retVal += p.toString();
+			}
+		}
+		
+		return retVal;
+	}
 	
 	
 	// boolean checkSongInLibrary - checks if a song identified by its name and artist is in the 
