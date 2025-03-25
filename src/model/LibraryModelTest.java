@@ -204,7 +204,7 @@ class LibraryModelTest {
 		
 		assertEquals(titles,expected);
 		
-		library.removeSong("Uh Oh", "Norah Jones");
+		assertTrue(library.removeSong("Uh Oh", "Norah Jones"));
 		
 		String titles2 = library.getSongTitles();
 		
