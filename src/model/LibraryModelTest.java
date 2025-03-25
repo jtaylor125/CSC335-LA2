@@ -358,6 +358,28 @@ class LibraryModelTest {
 	}
 	
 	@Test
+	void testPlaylistShuffle() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.createPlaylist("Mana");
+		
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Ana", "Mana", "Mana");
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Mana");
+		
+		String playlistInfo = library.getPlaylists();
+		library.shufflePlaylist("Mana");
+		String newPlaylistInfo = library.getPlaylists();
+		
+		assertFalse(playlistInfo.equals(newPlaylistInfo));	
+	}
+	
+	@Test
 	void testMarkGetFavorite() {
 		LibraryModel library = new LibraryModel();
 		MusicStore ms = new MusicStore();
@@ -408,5 +430,170 @@ class LibraryModelTest {
 		assertTrue(library.checkSongInLibrary("Tired", "Adele"));
 		assertTrue(library.checkSongInLibrary("Uh Oh", "Norah Jones"));
 		assertFalse(library.checkSongInLibrary("Ana", "Mana"));
+	}
+	
+	@Test
+	void testGetSortedSongTitlesTitle() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		String ascending = library.getSortedSongTitlesTitle("ascending");
+		String descending = library.getSortedSongTitlesTitle("descending");
+		
+		String ascendingExpected = "Ana\n"
+				+ "Selva Negra\n"
+				+ "Tired\n"
+				+ "Uh Oh\n";
+		
+		String descendingExpected = "Uh Oh\n"
+				+ "Tired\n"
+				+ "Selva Negra\n"
+				+ "Ana\n";
+		
+		assertEquals(ascending,ascendingExpected);
+		assertEquals(descending,descendingExpected);
+	}
+	
+	@Test
+	void testGetSortedSongTitlesArtist() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		String ascending = library.getSortedSongTitlesArtist("ascending");
+		String descending = library.getSortedSongTitlesArtist("descending");
+		
+		String ascendingExpected = "Tired\n"
+				+ "Ana\n"
+				+ "Selva Negra\n"
+				+ "Uh Oh\n";
+		
+		String descendingExpected = "Uh Oh\n"
+				+ "Selva Negra\n"
+				+ "Ana\n"
+				+ "Tired\n";
+		
+		assertEquals(ascending,ascendingExpected);
+		assertEquals(descending,descendingExpected);
+	}
+	
+	@Test
+	void testGetSortedSongTitlesRating() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.rateSong("Tired", "Adele", 3);
+		library.rateSong("Selva Negra", "Mana", 5);
+		library.rateSong("Ana", "Mana", 4);
+		
+		String ascending = library.getSortedSongTitlesRating("ascending");
+		String descending = library.getSortedSongTitlesRating("descending");
+		
+		String ascendingExpected = "Uh Oh\n"
+				+ "Tired\n"
+				+ "Ana\n"
+				+ "Selva Negra\n";
+		
+		String descendingExpected = "Selva Negra\n"
+				+ "Ana\n"
+				+ "Tired\n"
+				+ "Uh Oh\n";
+		
+		assertEquals(ascending,ascendingExpected);
+		assertEquals(descending,descendingExpected);
+	}
+	
+	@Test
+	void testRecents() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.playSong("Uh Oh", "Norah Jones");
+		library.playSong("Ana", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		
+		String recents = library.getRecentsPlaylist();
+		String expected = "Playlist : Recents\n"
+				+ "Selva Negra, Mana\n"
+				+ "Selva Negra, Mana\n"
+				+ "Ana, Mana\n"
+				+ "Uh Oh, Norah Jones\n\n";
+		
+		assertEquals(recents,expected);
+	}
+	
+	@Test
+	void testFrequents() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		
+		library.playSong("Uh Oh", "Norah Jones");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+		library.playSong("Ana", "Mana");
+
+		library.playSong("Selva Negra", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		library.playSong("Selva Negra", "Mana");
+		
+		String frequents = library.getFrequentsPlaylist();
+		System.out.println(frequents);
+		String expected = "Playlist : Frequents\n"
+				+ "Ana, Mana\n"
+				+ "Selva Negra, Mana\n"
+				+ "Uh Oh, Norah Jones\n\n";
+		
+		assertEquals(frequents,expected);
+	}
+	
+	@Test
+	void testGenres() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addAlbum("Waking Up", "OneRepublic", ms);
+		library.addAlbum("Sons", "The Heavy", ms);
+		
+		String genres = library.getGenrePlaylists();
+		System.out.println(genres);
+		String expected = "Playlist : Recents\n"
+				+ "Selva Negra, Mana\n"
+				+ "Selva Negra, Mana\n"
+				+ "Ana, Mana\n"
+				+ "Uh Oh, Norah Jones\n\n";
+		
+		assertEquals(genres,expected);
 	}
 }
