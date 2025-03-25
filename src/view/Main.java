@@ -121,6 +121,12 @@ public class Main {
 				favoriteCommand(systemIn, library);
 			else if (command.equals("Rate"))
 				rateCommand(systemIn, library);
+			else if (command.equals("Play"))
+				playCommand(systemIn, library);
+			else if (command.equals("Shuffle")) 
+				shuffleCommand(systemIn, library);
+			else if (command.equals("Remove"))
+				removeCommand(systemIn, library);
 			else
 				System.out.println("Unknown Command");
 			
@@ -151,6 +157,12 @@ public class Main {
 		
 		System.out.print("Rate:        ");
 		System.out.println("Allows you to rate a song from the Library on a scale of 1-5");
+		
+		System.out.print("Play:        ");
+		System.out.println("Allows you to play a song (and shuffle) songs and playlists");
+		
+		System.out.print("Remove:      ");
+		System.out.println("Allows you to remove a song or album from the Library");
 	}
 	
 	public static void searchCommand(Scanner s, MusicStore ms, LibraryModel library) {
@@ -164,8 +176,8 @@ public class Main {
 			System.out.println("Enter \"Song\" or \"Album\"");
 			String songOrAlbum = s.nextLine().strip();
 			
-			System.out.println("Would you like to search by Title or Artist?");
-			System.out.println("Enter \"Title\" or \"Artist\"");
+			System.out.println("Would you like to search by Title or Artist or Genre?");
+			System.out.println("Enter \"Title\" or \"Artist\" or \"Genre\"");
 			String titleOrArtist = s.nextLine().strip();
 			
 			System.out.printf("Enter the %s of the %s to search for \n", titleOrArtist, songOrAlbum);
@@ -175,8 +187,26 @@ public class Main {
 			
 			if("".equals(searchResults))
 				System.out.printf("No %ss of %s found\n", songOrAlbum, titleOrArtist);
-			else
+			else {
 				System.out.print(searchResults);
+				
+				System.out.println("If you would like to see more information about a song, type \"Info\" anything else will return");
+				String moreInfo = s.nextLine().strip();;
+				
+				if(moreInfo.equals("Info")) {
+					System.out.println("Enter Song Title from Search:");
+					String songTitle = s.nextLine().strip();
+					System.out.println("Enter Song Artist from Search:");
+					String songArtist = s.nextLine().strip();
+					
+					moreInfo = library.getSongInfo(songTitle, songArtist);
+					
+					if(moreInfo.equals(""))
+						System.out.println("No song found");
+					else
+						System.out.println(moreInfo);
+				}
+			}
 		} else if (answer.equals("Store")) {
 			System.out.println("Would you like to search Songs or Albums?");
 			System.out.println("Enter \"Song\" or \"Album\"");
@@ -260,7 +290,18 @@ public class Main {
 		String answer = s.nextLine().strip();
 		
 		if (answer.equals("Songs")) {
-			System.out.println(library.getSongTitles());
+			System.out.println("What would you like the songs sorted by?");
+			System.out.println("Enter \"Title\" \"Artist\" or \"Rating\" or anything else to go back");
+			answer = s.nextLine().strip();
+			
+			if(answer.equals("Title"))
+				System.out.println(library.getSortedSongTitlesTitle("Ascending"));
+			else if (answer.equals("Artist"))
+				System.out.println(library.getSortedSongTitlesArtist("Ascending"));
+			else if (answer.equals("Rating"))
+				System.out.println(library.getSortedSongTitlesRating("Ascending"));
+			else 
+				System.out.println("Going back...");
 		} else if (answer.equals("Artists")) {
 			System.out.println(library.getArtists());
 		} else if (answer.equals("Albums")) {
@@ -391,6 +432,73 @@ public class Main {
 		} else {
 			System.out.println("Song not found");
 			System.out.println("Going back...");
+		}
+	}
+	
+	public static void removeCommand(Scanner s, LibraryModel library) {
+		System.out.println("Would you like to remove a Song or an Album?");
+		System.out.println("Enter \"Song\" or \"Album\"");
+		String songOrAlbum = s.nextLine().strip();
+		
+		System.out.printf("What %s would you like to remove?\n", songOrAlbum);
+		String songName = s.nextLine().strip();
+		
+		System.out.printf("Enter the artist of the %s:\n", songOrAlbum);
+		String artist = s.nextLine().strip();
+		
+		if(songOrAlbum.equals("Song")) {
+			boolean worked = library.removeSong(songName, artist);
+			if(!worked)
+				System.out.println("Song not found, removal failed");
+		} else if (songOrAlbum.equals("Album")) {
+			boolean worked = library.removeAlbum(songName, artist);
+			if(!worked)
+				System.out.println("Album not found, removal failed");
+		} else {
+			System.out.printf("%s not removable, try \"Song\" or \"Album\" \n");
+			System.out.println("returning...");
+		}
+	}
+	
+	public static void playCommand(Scanner s, LibraryModel library) {
+		System.out.println("Would you like to search for a song or a playlist");
+		System.out.println("Enter \"Song\" or \"Playlist\"");
+		String songOrPlaylist = s.nextLine().strip();
+		
+		if(songOrPlaylist.equals("Song")) {
+			System.out.println("Enter title of song");
+			String songName = s.nextLine().strip();
+			
+			System.out.println("Enter artist");
+			String artist = s.nextLine().strip();
+			
+			if(library.checkSongInLibrary(songName, artist))
+				library.playSong(songName, artist);
+			else
+				System.out.printf("Song \"%s\" by \"%s\"not found \n", songName, artist);
+		} else if(songOrPlaylist.equals("Playlist")) {
+			String playlistName = s.nextLine().strip();
+			if(library.checkPlaylistExistence(playlistName))
+				library.playPlaylist(playlistName);
+			else
+				System.out.printf("Playlist \"%s\" not found \n", playlistName);
+		} else {
+			System.out.printf("%s not usable\n", songOrPlaylist);
+			System.out.println("returning...");
+		}
+	}
+	
+	public static void shuffleCommand(Scanner s, LibraryModel library) {
+		System.out.println("Would you like to shuffle the library or a playlist");
+		System.out.println("Enter \"Library\" or \"Playlist\"");
+		String libOrPlaylist = s.nextLine().strip();
+		
+		if(libOrPlaylist.equals("Library")) {
+			
+		} else if (libOrPlaylist.equals("Playlist")) {
+			
+		} else {
+			System.out.printf("%s not shufflable\n", libOrPlaylist);
 		}
 	}
 }

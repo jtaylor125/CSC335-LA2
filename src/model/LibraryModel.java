@@ -195,8 +195,12 @@ public class LibraryModel {
 	}
 	
 	//TODO// NEEDS COMMENT
-	public void removeSong(String title, String artist) {
+	public boolean removeSong(String title, String artist) {
 		UserSong song = this.getSong(title, artist);
+		
+		if(song == null) {
+			return false;
+		}
 		
 		String genre = this.getAlbum(song.getAlbum(), artist).getGenre();
 		
@@ -217,12 +221,19 @@ public class LibraryModel {
 		this.updateGenres();
 		this.removeFromRecents(song);
 		this.updateTopRated();
+		
+		return true;
 	}
 	
 	
 	//TODO// NEEDS COMMENT
-	public void removeAlbum(String name, String artist) {
+	public boolean removeAlbum(String name, String artist) {
 		UserAlbum album = this.getAlbum(name, artist);
+		
+		if(album == null) {
+			return false;
+		}
+		
 		ArrayList<UserSong> songs = album.getUserSongs();
 		
 		for(UserSong s : songs) {
@@ -239,6 +250,8 @@ public class LibraryModel {
 		this.updateFrequents();
 		this.updateGenres();
 		this.updateTopRated();
+		
+		return true;
 	}
 	
 	// String getSongTitles - returns one String with all of the song titles in the library on
@@ -674,6 +687,11 @@ public class LibraryModel {
 		// update playlists
 		this.updateRecents(song);
 		this.updateFrequents();
+	}
+	
+	//TODO
+	public void playPlaylist(String playlistName) {
+		
 	}
 	
 	public void shuffleLibrary() {
