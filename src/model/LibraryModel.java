@@ -25,6 +25,7 @@ public class LibraryModel {
 	 */
 	
 	private ArrayList<UserSong> library;
+	private ArrayList<UserSong> shuffledLibrary;
 	private ArrayList<UserAlbum> albums;
 	private ArrayList<Playlist> playlistList;
 	
@@ -43,6 +44,7 @@ public class LibraryModel {
 	
 	public LibraryModel() {
 		this.library = new ArrayList<UserSong>();
+		this.shuffledLibrary = new ArrayList<UserSong>();
 		this.albums = new ArrayList<UserAlbum>();
 		
 		this.playlistList = new ArrayList<Playlist>();
@@ -168,6 +170,12 @@ public class LibraryModel {
 			genreCounts.put(genre, 1);
 		}
 		
+		this.updateFavorites();
+		this.updateFrequents();
+		this.updateGenres();
+		this.updateTopRated();
+		this.shuffleLibrary();
+		
 		return true;
 	}
 	
@@ -187,11 +195,26 @@ public class LibraryModel {
 		
 		for (Song s : album.getSongs()) {
 			UserSong tempSong = new UserSong(s);
-			if (!this.checkSongInLibrary(s.getTitle(), artist))
+			if (!this.checkSongInLibrary(s.getTitle(), artist)) {
 				library.add(tempSong);
+				
+				String genre = this.getAlbum(s.getAlbum(), artist).getGenre();
+				if (this.genreCounts.containsKey(genre)) {
+					genreCounts.put(genre, genreCounts.get(genre)+1);
+				} else {
+					genreCounts.put(genre, 1);
+				}
+			}
 			
 			ua.addSong(tempSong);
 		}
+		
+		this.updateFavorites();
+		this.updateFrequents();
+		this.updateGenres();
+		this.updateTopRated();
+		this.shuffleLibrary();
+		
 		return true;
 	}
 	
@@ -222,6 +245,7 @@ public class LibraryModel {
 		this.updateGenres();
 		this.removeFromRecents(song);
 		this.updateTopRated();
+		this.shuffleLibrary();
 		
 		return true;
 	}
@@ -251,6 +275,7 @@ public class LibraryModel {
 		this.updateFrequents();
 		this.updateGenres();
 		this.updateTopRated();
+		this.shuffleLibrary();
 		
 		return true;
 	}
@@ -263,6 +288,21 @@ public class LibraryModel {
 		// need to add getTitle to song
 		for (int i=0; i<library.size();i++) {
 			titles.add(library.get(i).getTitle());
+		}
+		
+		String retval = "";
+		for (String t : titles)
+			retval = retval + t + "\n";
+		
+		return retval;
+	}
+	
+	public String getShuffledSongTitles(){
+		ArrayList<String> titles = new ArrayList<String>();
+		
+		// need to add getTitle to song
+		for (int i=0; i<shuffledLibrary.size();i++) {
+			titles.add(shuffledLibrary.get(i).getTitle());
 		}
 		
 		String retval = "";
@@ -551,14 +591,7 @@ public class LibraryModel {
 	public void shufflePlaylist(String name) {
 		for (Playlist p: playlistList) {
 			if (p.getName().equals(name)) {
-				String playlistInfo = p.toString();
-				p.shuffle();
-				String newPlaylistInfo = p.toString();
-				while (newPlaylistInfo.equals(playlistInfo) && p.getSize() >= 2) {
-					p.shuffle();
-					newPlaylistInfo = p.toString();
-				}
-				
+				p.shuffle();			
 			}
 		}
 	}
@@ -622,6 +655,7 @@ public class LibraryModel {
 	}
 	
 	//TODO: COMMENT
+	// EDIT: Might not need this with the current implementation
 	void setMostRecent(String songTitle, String artist) {
 		UserSong mostRecent = this.getSong(songTitle, artist);
 		
@@ -680,6 +714,23 @@ public class LibraryModel {
 		String retval = "";
 		
 		for(Song s :curr.getSongList()) {
+			if (s != null)
+				retval = retval + s.getTitle() + "," + s.getArtist() + "\n";
+		}
+		
+		return retval;
+	}
+	
+	public String getPlaylistShuffleSongs(String playlistName) {
+		Playlist curr = this.getPlaylist(playlistName);
+		
+		if(curr == null) {
+			return null;
+		}
+		
+		String retval = "";
+		
+		for(Song s :curr.getShuffleSongList()) {
 			retval = retval + s.getTitle() + "," + s.getArtist() + "\n";
 		}
 		
@@ -784,7 +835,8 @@ public class LibraryModel {
 	}
 	
 	public void shuffleLibrary() {
-		Collections.shuffle(this.library);
+		this.shuffledLibrary = new ArrayList<UserSong>(this.library);
+		Collections.shuffle(this.shuffledLibrary);
 	}
 	
 	// Song getSong - private helper method to get a song object from the library. Returns null

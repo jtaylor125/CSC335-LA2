@@ -20,6 +20,8 @@ public class Playlist {
 	 */
 	
 	private ArrayList<Song> playlist;
+	private ArrayList<Song> shuffledPlaylist;
+	
 	private final String name;
 	
 	/*
@@ -29,12 +31,14 @@ public class Playlist {
 	public Playlist(String name) {
 		this.name = name;
 		this.playlist = new ArrayList<Song>();
+		this.shuffledPlaylist = new ArrayList<Song>();  
 	}
 	
 	// void add(Song song) - add a song to the playlist. Assumes song is not already in the
 	// playlist to avoid duplicates
 	public void add(Song song) {
 		playlist.add(song);
+		this.shuffle();
 	}
 	
 	// void removeSong(Song song) - remove a song from the playlist. Assumes song is in the
@@ -46,14 +50,21 @@ public class Playlist {
 				playlist.remove(i);
 			}
 		}
+		this.shuffle();
 	}
 	
 	// boolean hasSong(Song song) - returns true if the song is in the playlist, false otherwise.
 	public boolean hasSong(Song song) {
-		for (Song s : playlist)
-			if(s.equals(song)) {
-				return true;
+		if (playlist.size() == 0) {
+			return false;
+		}
+		for (Song s : playlist) {
+			if (s != null) {
+				if(s.equals(song)) {
+					return true;
+				}
 			}
+		}
 		return false;
 	}
 	
@@ -73,12 +84,17 @@ public class Playlist {
 		return new ArrayList<Song>(this.playlist);
 	}
 	
+	public ArrayList<Song> getShuffleSongList(){
+		return new ArrayList<Song>(this.shuffledPlaylist);
+	}
+	
 	/*
 	 * 		Overridden toString method (playlist name and songs)
 	 */
 	
 	public void shuffle() {
-		Collections.shuffle(playlist);
+		this.shuffledPlaylist = new ArrayList<Song>(this.playlist);
+		Collections.shuffle(this.shuffledPlaylist);
 	}
 	
 	public void clear() {
@@ -90,7 +106,8 @@ public class Playlist {
 		String retval = "Playlist : " + this.name + "\n";
 		
 		for (Song s : playlist) {
-			retval = retval + s.getTitle() + ", " + s.getArtist() + "\n";
+			if (s != null)
+				retval = retval + s.getTitle() + ", " + s.getArtist() + "\n";
 		}
 		
 		retval = retval + "\n";
