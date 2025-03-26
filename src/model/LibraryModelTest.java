@@ -259,18 +259,6 @@ class LibraryModelTest {
 		
 		assertEquals(2, library.playlistLength("Mana"));
 		assertEquals(1, library.playlistLength("Other"));
-		
-		String playlists = library.getPlaylists();
-		String expected = "Playlist : Mana\n"
-				+ "Selva Negra, Mana\n"
-				+ "Ana, Mana\n"
-				+ "\n"
-				+ "\n"
-				+ "Playlist : Other\n"
-				+ "Uh Oh, Norah Jones\n"
-				+ "\n"
-				+ "\n";
-		assertEquals(playlists,expected);
 	}
 	
 	@Test
@@ -354,34 +342,6 @@ class LibraryModelTest {
 		assertTrue(library.checkSongInPlaylist("Uh Oh", "Norah Jones", "Other"));
 		
 		assertFalse(library.checkSongInPlaylist("Uh Oh", "Norah Jones", "Final"));
-	}
-	
-	@Test
-	void testPlaylistShuffle() {
-		LibraryModel library = new LibraryModel();
-		MusicStore ms = new MusicStore();
-		library.addSong("Tired", "Adele", ms);
-		library.addSong("Uh Oh", "Norah Jones", ms);
-		library.addSong("Selva Negra", "Mana", ms);
-		library.addSong("Ana", "Mana", ms);
-		library.addSong("Waking Up", "Leonard Cohen", ms);
-		library.addSong("Waking Up", "OneRepublic", ms);
-		
-		
-		library.createPlaylist("Mana");
-		
-		library.addToPlaylist("Selva Negra", "Mana", "Mana");
-		library.addToPlaylist("Ana", "Mana", "Mana");
-		library.addToPlaylist("Uh Oh", "Norah Jones", "Mana");
-		library.addToPlaylist("Tired", "Adele", "Mana");
-		library.addToPlaylist("Waking Up", "Leonard Cohen", "Mana");
-		library.addToPlaylist("Waking Up", "OneRepublic", "Mana");
-		
-		String playlistInfo = library.getPlaylistSongs("Mana");
-		library.shufflePlaylist("Mana");
-		String newPlaylistInfo = library.getPlaylistSongs("Mana");
-		
-		assertFalse(playlistInfo.equals(newPlaylistInfo));	
 	}
 	
 	@Test
@@ -720,7 +680,11 @@ class LibraryModelTest {
 		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
 		
 		String names = library.getPlaylistNames();
-		String expected = "Mana\n"
+		String expected = "Recents\n"
+				+ "Favorites\n"
+				+ "Frequents\n"
+				+ "Top Rated\n"
+				+ "Mana\n"
 				+ "Other\n";
 		assertEquals(names,expected);
 	}
@@ -743,7 +707,6 @@ class LibraryModelTest {
 		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
 		
 		String names = library.getPlaylistSongs("Mana");
-		System.out.println(names);
 		String expected = "Selva Negra,Mana\n"
 				+ "Ana,Mana\n";
 		assertEquals(names,expected);
@@ -757,18 +720,98 @@ class LibraryModelTest {
 		library.addSong("Uh Oh", "Norah Jones", ms);
 		library.addSong("Selva Negra", "Mana", ms);
 		library.addSong("Ana", "Mana", ms);
+		library.addSong("Waking Up", "OneRepublic", ms);
+		library.addSong("Lullaby", "OneRepublic", ms);
+		library.addSong("Fear", "OneRepublic", ms);
+		library.addSong("Secrets", "OneRepublic", ms);
 		
 		library.createPlaylist("Mana");
 		library.createPlaylist("Other");
 		
 		
 		library.addToPlaylist("Selva Negra", "Mana", "Mana");
-		library.addToPlaylist("Ana", "Mana", "Mana");
-		library.addToPlaylist("Uh Oh", "Norah Jones", "Other");
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Mana");
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Tired", "Adele", "Mana");
+		library.addToPlaylist("Waking Up", "OneRepublic", "Mana");
+		library.addToPlaylist("Lullaby", "OneRepublic", "Mana");
+		library.addToPlaylist("Fear", "OneRepublic", "Mana");
+		library.addToPlaylist("Secrets", "OneRepublic", "Mana");
 		
 		String shuffle1 = library.getPlaylistShuffleSongs("Mana");
 		library.shufflePlaylist("Mana");
 		String shuffle2 = library.getPlaylistShuffleSongs("Mana");
 		assertFalse(shuffle1.equals(shuffle2));
+	}
+	
+	@Test
+	void testGetPlaylists(){
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		library.addSong("Waking Up", "OneRepublic", ms);
+		library.addSong("Lullaby", "OneRepublic", ms);
+		library.addSong("Fear", "OneRepublic", ms);
+		library.addSong("Secrets", "OneRepublic", ms);
+		
+		library.createPlaylist("Mana");
+		library.createPlaylist("Other");
+		
+		
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Mana");
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Tired", "Adele", "Mana");
+		library.addToPlaylist("Waking Up", "OneRepublic", "Mana");
+		library.addToPlaylist("Lullaby", "OneRepublic", "Mana");
+		library.addToPlaylist("Fear", "OneRepublic", "Mana");
+		library.addToPlaylist("Secrets", "OneRepublic", "Mana");
+		
+		String playlist = library.getPlaylists();
+		int playlistLen = playlist.length(); // to avoid issues with shuffle
+		assertEquals(playlistLen,645);
+	}
+	
+	@Test
+	void testGetInfoAfterSearch() {
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		
+		String search = library.getInfoAfterSearch("Tired", "Adele");
+		String expected = "Title: Tired\n"
+				+ "Artist: Adele\n"
+				+ "Album: 19\n"
+				+ "Genre: Pop\n";
+		assertEquals(search,expected);
+	}
+	
+	@Test
+	void testPlayPlaylists(){
+		LibraryModel library = new LibraryModel();
+		MusicStore ms = new MusicStore();
+		library.addSong("Tired", "Adele", ms);
+		library.addSong("Uh Oh", "Norah Jones", ms);
+		library.addSong("Selva Negra", "Mana", ms);
+		library.addSong("Ana", "Mana", ms);
+		library.addSong("Waking Up", "OneRepublic", ms);
+		library.addSong("Lullaby", "OneRepublic", ms);
+		library.addSong("Fear", "OneRepublic", ms);
+		library.addSong("Secrets", "OneRepublic", ms);
+		
+		library.createPlaylist("Mana");
+		library.createPlaylist("Other");
+		
+		
+		library.addToPlaylist("Selva Negra", "Mana", "Mana");
+		library.addToPlaylist("Uh Oh", "Norah Jones", "Mana");
+		
+		String playlistState = library.getFrequentsPlaylist();
+		library.playPlaylist("Mana");
+		String playlistState2 = library.getFrequentsPlaylist();
+		assertTrue(!playlistState.equals(playlistState2));
 	}
 }

@@ -669,11 +669,8 @@ public class LibraryModel {
 		}
 	}
 	
-	//TODO: COMMENT
-	// EDIT: Might not need this with the current implementation
 	void setMostRecent(String songTitle, String artist) {
 		UserSong mostRecent = this.getSong(songTitle, artist);
-		
 		if(mostRecent != null) {
 			this.updateRecents(mostRecent);
 		}

@@ -78,4 +78,6 @@ class UserSongTest {
 		assertEquals(s.getRating(),5);
 		assertTrue(s.isFavorite());
 	}
+	
+	//Comparators tested in libraryModel
 }
