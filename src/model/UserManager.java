@@ -35,7 +35,8 @@ public class UserManager {
 		this.salt = "[B@254989ff".getBytes();
 	}
 	
-	//TODO: COMMENT
+	// buildPasswords(Scanner) -- parses the user information from text file
+	// and builds HashMap containing usernames and passwords
 	private HashMap<String, String> buildPasswords(Scanner inFile) {
 		HashMap<String, String> retMap = new HashMap<>();
 		
@@ -50,12 +51,13 @@ public class UserManager {
 		return retMap;
 	}
 	
-	//TODO: COMMENT
+	// isUse(String) -- determines if the username passed is already a user
 	public boolean isUser(String username) {
 		return passwords.keySet().contains(username);
 	}
 	
-	//TODO: COMMENT
+	// createUser(String, String) -- builds a new LibraryModel for the user and returns
+	// the Object. also stores necessary user informatiuon to associated databases
 	public LibraryModel createUser(String username, String password) {
 		this.passwords.put(username, this.hashPassword(password));
 		
@@ -66,7 +68,8 @@ public class UserManager {
 		return newLib;
 	}
 	
-	// NEEDS COMMENT
+	// checkCredentials(String, String) --  checks to see if the password is valid
+	// for the user
 	public boolean checkCredentials(String username, String password) {
 		if(!this.isUser(username))
 			return false;
@@ -74,7 +77,8 @@ public class UserManager {
 		return this.hashPassword(password).equals(this.passwords.get(username));
 	}
 	
-	// NEEDS COMMENT
+	// login(String, String, MusicStore) -- returns the LibraryModel for the
+	// specified user, building it from file if not locally loaded
 	public LibraryModel login(String username, String password, MusicStore ms) {
 		if(!checkCredentials(username, password))
 			return null;
@@ -89,7 +93,8 @@ public class UserManager {
 		return userLib;
 	}
 	
-	//TODO: COMMENT
+	// buildLibrary -- parsees a user txt file to build a LibraryModel from
+	// the txt file.
 	private LibraryModel buildLibrary(String username, MusicStore ms) {
 		LibraryModel lib = new LibraryModel();
 		String fileName = "User__" + username + "__.txt";
@@ -157,7 +162,8 @@ public class UserManager {
 		return lib;
 	} // end method buildLibrary
 	
-	//TODO: COMMENT
+	// saveToFiles() -- stores all relevant informatrion stored in local HashMaps
+	// into the UserInformation.txt and specific usaer account txt files.
 	public void saveToFiles() throws IOException {
 		Set<String> users = this.passwords.keySet();
 		
@@ -201,7 +207,7 @@ public class UserManager {
 		userInfo.close();
 	}
 	
-	//TODO: COMMENT
+	// hashPassword() -- Hashes the String representation of a users password
 	private String hashPassword(String password) {
 		MessageDigest md;
 		try {
