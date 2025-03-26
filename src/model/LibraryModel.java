@@ -57,6 +57,11 @@ public class LibraryModel {
 		this.favorites = new Playlist("Favorites");
 		this.frequents = new Playlist("Frequents");
 		this.topRated  = new Playlist("Top Rated");
+		
+		this.playlistList.add(recents);
+		this.playlistList.add(favorites);
+		this.playlistList.add(frequents);
+		this.playlistList.add(topRated);
 	}
 	
 	/*
@@ -443,16 +448,17 @@ public class LibraryModel {
 	public String getPlaylists(){
 		ArrayList<String> playlists = new ArrayList<String>();
 		
-		// need to add getAlbum to song ???TODO???
 		for (int i=0; i<playlistList.size();i++) {
 			if (!playlists.contains(playlistList.get(i).getName())) {
-				playlists.add(playlistList.get(i).toString());
+				playlists.add(playlistList.get(i).toString() + "Shuffled: \n" + playlistList.get(i).getShuffleSongListString());
 			}
 		}
 		
 		String retval = "";
-		for (String p : playlists)
+		for (String p : playlists) {
 			retval = retval + p + "\n";
+		}
+		
 		
 		return retval;
 	}
@@ -478,8 +484,19 @@ public class LibraryModel {
 	
 	//TODO: COMMENT
 	public String getInfoAfterSearch(String songName, String artist) {
-		//TODO
-		return null;
+		String retval ="";
+		
+		for (Album a : this.albums) {
+			for (Song s : a.getSongs()) {
+				if (s.getTitle().equals(songName) && s.getArtist().equals(artist)) {
+					retval += "Title: " + songName + "\n";
+					retval += "Artist: " + artist + "\n";
+					retval += "Album: " + a.getName() + "\n";
+					retval += "Genre: " + a.getGenre() + "\n";
+				}
+			}
+		}
+		return retval;
 	}
 	
 	// boolean createPlaylist - creates a playlist named by the parameter. If a playlist already
@@ -555,8 +572,6 @@ public class LibraryModel {
 			return true;
 		else if (playlistName.equals("Top Rated"))
 			return true;
-	
-		//TODO: genre playlists?
 		
 		
 		return false;
@@ -790,7 +805,9 @@ public class LibraryModel {
 		UserSong song = this.getSong(songName, artist);
 		
 		song.setFavorite();
-
+		
+		this.updateFavorites();
+		this.updateTopRated();
 	}
 	
 	// void rateSong - rates a song identified by its name and artist an integer rating. Assumes
@@ -800,9 +817,8 @@ public class LibraryModel {
 		
 		song.rate(rating);
 		
-		if (rating == 5) {
-			
-		}
+		this.updateFavorites();
+		this.updateTopRated();
 	}
 	
 	// int getSongRating - package-only helper method for testing the class. Returns the
@@ -831,7 +847,13 @@ public class LibraryModel {
 	
 	//TODO
 	public void playPlaylist(String playlistName) {
-		
+		for (Playlist p : this.playlistList) {
+			if (p.getName().equals(playlistName)) {
+				for (Song song : p.getSongList()) {
+					this.playSong(song.getTitle(), song.getArtist());
+				}
+			}
+		}
 	}
 	
 	public void shuffleLibrary() {
