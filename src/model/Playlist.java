@@ -88,6 +88,14 @@ public class Playlist {
 		return new ArrayList<Song>(this.shuffledPlaylist);
 	}
 	
+	public String getShuffleSongListString(){
+		String retval = "";
+		for (Song s : this.shuffledPlaylist) {
+			retval += s.toString();
+		}
+		return retval;
+	}
+	
 	/*
 	 * 		Overridden toString method (playlist name and songs)
 	 */

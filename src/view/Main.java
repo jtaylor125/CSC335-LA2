@@ -302,7 +302,7 @@ public class Main {
 		
 		if (answer.equals("Songs")) {
 			System.out.println("What would you like the songs sorted by?");
-			System.out.println("Enter \"Title\" \"Artist\" or \"Rating\" or anything else to go back");
+			System.out.println("Enter \"Title\" \"Artist\" or \"Rating\", Enter \"Shuffled\" for the current shuffle list, or anything else to go back");
 			answer = s.nextLine().strip();
 			
 			if(answer.equals("Title"))
@@ -310,7 +310,9 @@ public class Main {
 			else if (answer.equals("Artist"))
 				System.out.println(library.getSortedSongTitlesArtist("Ascending"));
 			else if (answer.equals("Rating"))
-				System.out.println(library.getSortedSongTitlesRating("Ascending"));
+				System.out.println(library.getSortedSongTitlesRating("Descending"));
+			else if (answer.equals("Shuffled"))
+				System.out.println(library.getShuffledSongTitles());
 			else 
 				System.out.println("Going back...");
 		} else if (answer.equals("Artists")) {
@@ -328,7 +330,7 @@ public class Main {
 	
 	public static void playlistCommand(Scanner s, LibraryModel library) {
 		System.out.println("Which playlist action do you want to take?");
-		System.out.println("Enter \"Create\", \"Add Song\", \"Remove Song\", or anything else to go back");
+		System.out.println("Enter \"Create\", \"Add Song\", \"Remove Song\", \"Shuffle\" or anything else to go back");
 		
 		String answer = s.nextLine().strip();
 		
@@ -392,6 +394,16 @@ public class Main {
 				} else {
 					System.out.println("Song not found in library");
 				}
+			} else {
+				System.out.println("Playlist not found");
+			}
+		} else if (answer.equals("Shuffle")) {
+			System.out.println("Enter the playlist you want to shuffle:");
+			String playlistName = s.nextLine().strip();
+			
+			if (library.checkPlaylistExistence(playlistName)) {
+				library.shufflePlaylist(playlistName);
+				System.out.println("Shuffled");
 			} else {
 				System.out.println("Playlist not found");
 			}
@@ -483,14 +495,19 @@ public class Main {
 			System.out.println("Enter artist");
 			String artist = s.nextLine().strip();
 			
-			if(library.checkSongInLibrary(songName, artist))
+			if(library.checkSongInLibrary(songName, artist)) {
 				library.playSong(songName, artist);
+				System.out.println("Playing song: " + songName);
+			}
 			else
 				System.out.printf("Song \"%s\" by \"%s\"not found \n", songName, artist);
 		} else if(songOrPlaylist.equals("Playlist")) {
+			System.out.println("Enter name of playlist");
 			String playlistName = s.nextLine().strip();
-			if(library.checkPlaylistExistence(playlistName))
+			if(library.checkPlaylistExistence(playlistName)) {
 				library.playPlaylist(playlistName);
+				System.out.println("Playing playlist: " + playlistName);
+			}
 			else
 				System.out.printf("Playlist \"%s\" not found \n", playlistName);
 		} else {
