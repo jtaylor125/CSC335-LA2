@@ -28,11 +28,17 @@ class AlbumTest {
 	@Test
 	void testBasic() {
 		Album a = getAlbum();
+		Album b = new Album(a);
 		
 		assertEquals(a.getName(), "Please Please Me");
 		assertEquals(a.getArtist(), "The Beatles");
 		assertEquals(a.getGenre(), "60s Rock");
 		assertEquals(a.getYear(), "1963");
+		
+		assertEquals(b.getName(), "Please Please Me");
+		assertEquals(b.getArtist(), "The Beatles");
+		assertEquals(b.getGenre(), "60s Rock");
+		assertEquals(b.getYear(), "1963");
 	}
 	
 	@Test

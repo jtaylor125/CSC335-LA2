@@ -673,9 +673,9 @@ public class LibraryModel {
 	
 	// Used by UserManager when building library from txt file to build
 	// most recent autoplaylist
+
 	void setMostRecent(String songTitle, String artist) {
 		UserSong mostRecent = this.getSong(songTitle, artist);
-		
 		if(mostRecent != null) {
 			this.updateRecents(mostRecent);
 		}

@@ -2,6 +2,8 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.Test;
 
 class PlaylistTest {
@@ -89,12 +91,79 @@ class PlaylistTest {
 		String compareString = "Playlist : newPlaylist" + "\n" + "I Saw Her Standing There, The Beatles\n" 
 		+ "Misery, The Beatles\n\n";
 		
-		System.out.println(compareString);
-		
-		System.out.println(playlist.toString());
-		
 		assertEquals(playlist.toString(), compareString);
 	}
 	
+	@Test
+	void testClear() {
+		Playlist playlist = new Playlist("newPlaylist");
+		
+		Song t0 = new Song("I Saw Her Standing There", "The Beatles", "Please Please Me");
+		Song t1 = new Song("Misery", "The Beatles", "Please Please Me");
+		
+		playlist.add(t0);
+		playlist.add(t1);
+		
+		playlist.clear();
+		assertEquals(playlist.toString(),"Playlist : newPlaylist\n\n");
+	}
 	
+	@Test
+	void testSongList() {
+		Playlist playlist = new Playlist("newPlaylist");
+		
+		Song t0 = new Song("I Saw Her Standing There", "The Beatles", "Please Please Me");
+		Song t1 = new Song("Misery", "The Beatles", "Please Please Me");
+		
+		playlist.add(t0);
+		playlist.add(t1);
+		
+		ArrayList<Song> songs = playlist.getSongList();
+		String song = "";
+		for (Song s : songs) {
+			song += s.toString();
+		}
+		
+		String expected = "I Saw Her Standing There\n"
+				+ "Artist: The Beatles\n"
+				+ "Album:  Please Please Me\n"
+				+ "Misery\n"
+				+ "Artist: The Beatles\n"
+				+ "Album:  Please Please Me\n";
+		
+		assertEquals(song,expected);
+	}
+	
+	@Test
+	void testShuffleSongList() {
+		Playlist playlist = new Playlist("newPlaylist");
+		
+		Song t0 = new Song("I Saw Her Standing There", "The Beatles", "Please Please Me");
+		Song t1 = new Song("Misery", "The Beatles", "Please Please Me");
+		
+		playlist.add(t0);
+		playlist.add(t1);
+		
+		ArrayList<Song> songs = playlist.getShuffleSongList();
+		String song = "";
+		for (Song s : songs) {
+			song += s.toString();
+		}
+		int length = song.length(); // to avoid issues with shuffle
+		assertEquals(length,122);
+	}
+	
+	@Test
+	void testShuffleSongListString() {
+		Playlist playlist = new Playlist("newPlaylist");
+		
+		Song t0 = new Song("I Saw Her Standing There", "The Beatles", "Please Please Me");
+		Song t1 = new Song("Misery", "The Beatles", "Please Please Me");
+		
+		playlist.add(t0);
+		playlist.add(t1);
+		
+		String shuffle = playlist.getShuffleSongListString();
+		assertEquals(shuffle.length(),122);
+	}
 }
